@@ -1,0 +1,119 @@
+Version :
+2.21
+
+Release Date :  
+October 12, 2012  
+
+New Features : 
+
+Added Support to preserve individual sections within /conf.  
+Individual sections can be preserved in interactive as well as in quiet mode.  
+Added the following options :    
+i. For Overrides options  
+        -preserve-sdr  
+        -preserve-fru  
+        -preserve-sel  
+        -preserve-ipmi  
+        -preserve-net  
+        -preserve-ntp  
+        -preserve-snmp  
+        -preserve-ssh  
+        -preserve-kvm   
+        -preserve-auth 
+
+ii. For Quiet options  
+        ignore-existing-overrides  
+NOTE: The above options only supported if File OverRide Support Feature is Enabled. 
+         
+-----------------------------------------------------------------------------------
+
+Version :
+2.23
+
+Release Date :
+Jan 7, 2013
+
+Features and Modifications:
+
+i.Added new copyrights - 2013.
+
+ii.Merged the sources of yafuflash and yafukcs in to a single package.
+    Here after yafuflash supports all the three mediums (LAN,USB,KCS).
+    '-kcs' option should be used to communicate via KCS medium.
+    Windows specific files are moved in to Common/Win folder.
+   
+----------------------------------------------------------------------------------
+
+Version : 2.24
+
+Release Date : Jan 29, 2013
+
+Features and Modifications :
+
+1.Added new option -quiet to show minimum progress details while flashing.
+2.Corrected some improper print messages
+
+Version : 2.25
+
+Release Date : Feb 7, 2013
+
+Features and Modifications :
+
+1. Added a check to verify whether the  given string after -ip option is valid or not.If it is valid then only we 
+   will try to establish the session.
+
+Version : 2.26
+
+Release Date : Mar 15,2013
+
+Bug Fix:
+   Image Verification should be done before getting the firmware info.
+
+Version : 2.27
+
+Release Date : Apr 10,2013
+
+Modifications:
+   Added -preserve-syslog option to preserve the syslog related configuration files.
+
+Version : 2.28
+
+Release Date : Apr 22,2013 
+
+Bug Fix:
+   Yafuflash firmware update in kcs medium failed for option -force-boot.
+
+Version : 2.29
+
+Release Date : May 08,2013 
+
+Bug Fix:
+   Restriction of two simultaneous Yafu_Sessions.
+
+Version : 2.30
+
+Release Date : May 08,2013
+
+Modifications: 
+   Added Split Functionality
+
+
+Version : 2.31
+
+Release Date : May 09,2013
+
+Modifications: 
+   Added Version Comparison flash support
+
+Version : 2.32
+
+Release Date : May 09,2013
+
+Modifications : 
+   Unloading Open IPMI Drivers while flashing using KCS 
+   and loading again the same modules when flashing is done.
+
+
+
+   
+
