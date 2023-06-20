@@ -135,7 +135,7 @@ extern HANDLE m_hD;
 #define MAX_UBOOT_VAR_LENGTH            320
 #define MAX_UBOOT_VAR_NAME_LENGTH       32
 #define MAX_SIZE_TO_READ                0x4000
-#define RECIEVE_TIME_OUT                60
+#define RECIEVE_TIME_OUT                5000
 #define MAX_FILE_LEN                    20
 #define MAX_BKUP_LEN                    5
 #define MAX_INPUT_LEN                   20

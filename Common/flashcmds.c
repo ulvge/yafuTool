@@ -911,7 +911,9 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
     ReqLen = sizeof(AMIYAFUWriteMemoryReq_T) + Datalen;
     ResLen = sizeof(AMIYAFUWriteMemoryRes_T);
 
-    //printf("\n WritetoMemory  start , AddofAlloc=%#llx", AddofAlloc);
+    if (AddofAlloc == 0x9e3fb008) {
+        printf("\n WritetoMemory  start , AddofAlloc=%#llx", AddofAlloc);
+    }
     while (1)
     {
         memset(WriteBuffer, 0, MAX_WRITEBUFLEN);
@@ -947,7 +949,11 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
                 fflush(stdout);
             }
             RetryCount += 1;
-            if (RetryCount <= RETRYCOUNT)
+
+            if (RetryCount == 1)
+            {
+                printf("\nWarning: WritetoMemory failed RetryCount at 1,errVal = %d \n", errVal);
+            } else if (RetryCount <= RETRYCOUNT)
             {
                 if (vdbg)
                 {
@@ -1926,7 +1932,7 @@ int FreeMemory(IPMI20_SESSION_T *hSession, INT32U WriteMemOff)
     BYTE CompCode;
 
     AMIYAFUFreeMemoryReq_T *pAMIYAFUFreeMemoryReq = NULL;
-    AMIYAFUFreeMemoryRes_T pAMIYAFUFreeMemoryRes;
+    AMIYAFUFreeMemoryRes_T pAMIYAFUFreeMemoryRes = {0};
     pAMIYAFUFreeMemoryReq = (AMIYAFUFreeMemoryReq_T *)&ReqBuf;
 
     ReqLen = sizeof(AMIYAFUFreeMemoryReq_T);

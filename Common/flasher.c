@@ -312,7 +312,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
                 WriteMemOff = Offset;
             }
 
-            printf("WritetoMemory  , FlashFirmware, line = %d\n", __LINE__);
+            //printf("WritetoMemory  , FlashFirmware, line = %d\n", __LINE__);
             if (WritetoMemory(hSession, WriteMemOff, Datalen, Buf) != 0)
             {
                 if (RecoveryFlashMode == 0x00)
@@ -881,7 +881,7 @@ int FullFlashThreadFn(IPMI20_SESSION_T *hSession, FILE *img, int Config, int Boo
         {
             if (Parsing.Silent == 0x01)
             {
-                printf("Upgrading Firmware Image...");
+                printf("Upgrading Firmware Image...\n");
                 fflush(stdout);
             }
 

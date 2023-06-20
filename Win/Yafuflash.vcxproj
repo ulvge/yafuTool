@@ -94,6 +94,13 @@
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LibraryPath>..\..\lib\libipmi\Win64\Debug;$(LibraryPath)</LibraryPath>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
       <TypeLibraryName>.\Debug/Yafuflash.tlb</TypeLibraryName>
@@ -145,7 +152,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\;..\..\..\Build\include;..\Common\Include;..\..\..\Build\include\global;..\..\..\Build\include\ipmi;..\..\..\Build\include\libipmi;..\..\..\Build\include\fmh;..\..\..\Build\include\flash;..\..\..\Build\include\network;..\..\..\Build\include\hostname;..\..\..\Build\include\encryption;..\Common\Support\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\;..\..\..\Build\include;..\Common\Include;..\..\..\Build\include\global;..\..\..\Build\include\ipmi;..\..\..\Build\include\libipmi;..\..\..\Build\include\fmh;..\..\..\Build\include\flash;..\..\..\Build\include\network;..\..\..\Build\include\hostname;..\..\..\Build\include\encryption;..\Common\Support\Include;..\..\lib\libipmi\Win64\Debug;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -163,7 +170,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Wbemuuid.lib;ws2_32.lib;odbc32.lib;odbccp32.lib;../../lib/libipmi/Win64/Debug/libipmid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Wbemuuid.lib;ws2_32.lib;odbc32.lib;odbccp32.lib;..\..\lib\libipmi\Win64\Debug\libipmid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\..\obj\Win64\Debug/Yafuflash.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -178,6 +185,9 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <OutputFile>.\..\obj\Win64\Debug/Yafuflash.bsc</OutputFile>
     </Bscmake>
+    <PostBuildEvent>
+      <Command>copy /y "E:\5source\MDS_source\2space\ast2500evb_ns207_workspace\software\lib\libipmi\Win64\debug\libipmid.lib"  "E:\5source\MDS_source\2space\ast2500evb_ns207_workspace\software\yafuflash-4.90.0-ANY\obj\Win64\debug\libipmid.lib"  &amp;&amp; copy /y "E:\5source\MDS_source\2space\ast2500evb_ns207_workspace\software\lib\libipmi\Win64\debug\libipmid.dll" "E:\5source\MDS_source\2space\ast2500evb_ns207_workspace\software\yafuflash-4.90.0-ANY\obj\Win64\debug\libipmid.dll" &amp;&amp; copy /y "E:\5source\MDS_source\2space\ast2500evb_ns207_workspace\software\lib\libipmi\Win64\debug\libipmid.pdb" "E:\5source\MDS_source\2space\ast2500evb_ns207_workspace\software\yafuflash-4.90.0-ANY\obj\Win64\debug\libipmid.pdb"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -248,7 +258,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Wbemuuid.lib;ws2_32.lib;odbc32.lib;odbccp32.lib;libipmi.lib;../../lib/libipmi/Win64/Release/libipmi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Wbemuuid.lib;ws2_32.lib;odbc32.lib;odbccp32.lib;..\..\lib\libipmi\Win64\Release\libipmi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\..\obj\Win64\Release/Yafuflash.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -263,6 +273,11 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <OutputFile>.\..\obj\Win64\Release/Yafuflash.bsc</OutputFile>
     </Bscmake>
+    <PostBuildEvent>
+      <Command>copy /y "E:\5source\MDS_source\2space\ast2500evb_ns207_workspace\software\lib\libipmi\Win64\Release\libipmi.lib"  "E:\5source\MDS_source\2space\ast2500evb_ns207_workspace\software\yafuflash-4.90.0-ANY\obj\Win64\Release\libipmi.lib"  &amp;&amp; copy /y "E:\5source\MDS_source\2space\ast2500evb_ns207_workspace\software\lib\libipmi\Win64\Release\libipmi.dll" "E:\5source\MDS_source\2space\ast2500evb_ns207_workspace\software\yafuflash-4.90.0-ANY\obj\Win64\Release\libipmi.dll" &amp;&amp; copy /y "E:\5source\MDS_source\2space\ast2500evb_ns207_workspace\software\lib\libipmi\Win64\Release\libipmi.pdb" "E:\5source\MDS_source\2space\ast2500evb_ns207_workspace\software\yafuflash-4.90.0-ANY\obj\Win64\Release\libipmi.pdb"</Command>
+      <Message>
+      </Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\links\libchecksum\data\crc32.c" />
