@@ -4286,7 +4286,8 @@ int DoMMCUpdate(IPMI20_SESSION_T *hSession)
 
         WriteMemOff = MMCAddofAllocMem;
         Datalength = bytesread;
-
+        
+        printf("WritetoMemory  , DoMMCUpdate, line = %d\n", __LINE__);
         if (WritetoMemory(hSession, WriteMemOff, Datalength, Buf) != 0)
         {
             printf("Error in Uploading Firmware Image\n");
@@ -4318,6 +4319,7 @@ int DoMMCUpdate(IPMI20_SESSION_T *hSession)
         WriteMemOff = MMCAddofAllocMem;
         Datalength = bytesread;
 
+        printf("WritetoMemory  , DoMMCUpdate, line = %d\n", __LINE__);
         if (WritetoMemory(hSession, WriteMemOff, Datalength, Buf) != 0)
         {
             printf("Error in Uploading Firmware Image\n");
@@ -4560,6 +4562,26 @@ int CreateMMCImage()
 
 int main(int argc, char *argv[])
 {
+    char *argInput[] = {
+        "NULL",
+        "-nw",
+        "-ip",
+        "192.168.0.100",
+        "-u",
+        "admin",
+        "-p",
+        "admin",
+        "-d",
+        "2",
+        "bios.bin",
+        NULL
+    };
+    argv = argInput;
+    argc = 0;
+    while (argv[argc] != NULL) {
+        argc++;
+    }
+
     int errVal = 0, Updateconfig = 0, check = 0, Ret = 0;
     INT16U i = 0;
     char username[64] = {0}, pass[64] = {0}, Choice[MAX_INPUT_LEN] = {0};
@@ -4653,9 +4675,11 @@ int main(int argc, char *argv[])
         do
         {
             Enable_success = 0;
-            wRet = LIBIPMI_Create_IPMI20_Session(&hSession, device, Parsing.Portnum, pUser, pPass,
+            /*wRet = LIBIPMI_Create_IPMI20_Session(&hSession, device, Parsing.Portnum, pUser, pPass,
                                                  byAuthType, 1, 1, &byPrivLevel,
-                                                 byMedium, 0xc2, 0x20, NULL, 0, 3000);
+                                                 byMedium, 0xc2, 0x20, NULL, 0, 3000);*/
+            wRet = LIBIPMI_E_SUCCESS;
+            Enable_success = 1;
             if (wRet != LIBIPMI_E_SUCCESS)
             {
                 if (byMedium == USB_MEDIUM)

@@ -2,3 +2,6 @@
 *.tlog
 
 /obj
+/Win/.vs/Yafuflash/v16/Browse.VC.db-shm
+/Win/.vs/Yafuflash/v16/Browse.VC.db-wal
+/Win/.vs/Yafuflash/v16/Browse.VC.opendb

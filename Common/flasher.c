@@ -312,6 +312,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
                 WriteMemOff = Offset;
             }
 
+            printf("WritetoMemory  , FlashFirmware, line = %d\n", __LINE__);
             if (WritetoMemory(hSession, WriteMemOff, Datalen, Buf) != 0)
             {
                 if (RecoveryFlashMode == 0x00)
@@ -1226,6 +1227,7 @@ int ModuleUpgrade(IPMI20_SESSION_T *hSession, FILE *img, int Module, int FlashFl
                     printf("\nError in fread \n");
                 }
 
+                printf("WritetoMemory  , ModuleUpgrade, line = %d\n", __LINE__);
                 if (WritetoMemory(hSession, AddofAllocMem + Offset, SizeToRead, Buf) != 0)
                 {
                     if (RecoveryFlashMode == 0x00)
@@ -1324,6 +1326,7 @@ int ModuleUpgrade(IPMI20_SESSION_T *hSession, FILE *img, int Module, int FlashFl
                 {
                     WriteMemOff = Offset;
                 }
+                printf("WritetoMemory  , ModuleUpgrade, line = %d\n", __LINE__);
                 if (WritetoMemory(hSession, WriteMemOff, Datalen, Buf) != 0)
                 {
                     if (RecoveryFlashMode == 0x00)
@@ -1542,6 +1545,7 @@ int FlashModule(IPMI20_SESSION_T *hSession, FILE *img, unsigned long SizetoCopy,
             {
                 WriteMemOff = Offset;
             }
+            printf("WritetoMemory  , FlashModule, line = %d\n", __LINE__);
             if (WritetoMemory(hSession, WriteMemOff, Datalen, Buf) != 0)
             {
                 if (RecoveryFlashMode == 0x00)

@@ -163,7 +163,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>ws2_32.lib;odbc32.lib;odbccp32.lib;../../lib/libipmi/Win64/Debug/libipmid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Wbemuuid.lib;ws2_32.lib;odbc32.lib;odbccp32.lib;../../lib/libipmi/Win64/Debug/libipmid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\..\obj\Win64\Debug/Yafuflash.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -248,7 +248,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Wbemuuid.lib;ws2_32.lib;odbc32.lib;odbccp32.lib;libipmi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Wbemuuid.lib;ws2_32.lib;odbc32.lib;odbccp32.lib;libipmi.lib;../../lib/libipmi/Win64/Release/libipmi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>.\..\obj\Win64\Release/Yafuflash.exe</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>

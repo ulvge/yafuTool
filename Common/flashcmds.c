@@ -897,6 +897,8 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
     int RetryCount_CSUM = 0;
     int RetryCount = 0;
     int errVal = -1;
+    
+    int printOnceAlread = 0;
     BYTE ResBuf[MAX_RES_SIZE];
     int ResLen, ReqLen;
     BYTE CompCode;
@@ -909,6 +911,7 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
     ReqLen = sizeof(AMIYAFUWriteMemoryReq_T) + Datalen;
     ResLen = sizeof(AMIYAFUWriteMemoryRes_T);
 
+    //printf("\n WritetoMemory  start , AddofAlloc=%#llx", AddofAlloc);
     while (1)
     {
         memset(WriteBuffer, 0, MAX_WRITEBUFLEN);
@@ -955,7 +958,7 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
             }
             else
             {
-                printf("Error: Retry Count exceeded. Aborting\n");
+                printf("Error: Retry Count exceeded. Aborting, line = %d, errVal = %d\n", __LINE__, errVal);
                 fflush(stdout);
                 return -1;
             }
@@ -985,7 +988,7 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting\n");
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -1017,7 +1020,7 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting\n");
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -1108,7 +1111,7 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
                 {
                     if (vdbg)
                     {
-                        printf("Error: Retry Count exceeded. Aborting\n");
+                        printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
                         fflush(stdout);
                     }
                     return -1;
@@ -1147,7 +1150,7 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
                 {
                     if (vdbg)
                     {
-                        printf("Error: Retry Count exceeded. Aborting\n");
+                        printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
                         fflush(stdout);
                     }
                     return -1;
@@ -1197,7 +1200,7 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting\n");
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -1229,7 +1232,7 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting\n");
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -1483,7 +1486,7 @@ int VerifyFlash(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsigned lo
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting\n");
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -1514,7 +1517,7 @@ int VerifyFlash(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsigned lo
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting\n");
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -1546,7 +1549,7 @@ int VerifyFlash(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsigned lo
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting\n");
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -2186,7 +2189,7 @@ int GetBootConfig(IPMI20_SESSION_T *hSession, char *BootVariables, char *BootVar
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting\n");
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -2218,7 +2221,7 @@ int GetBootConfig(IPMI20_SESSION_T *hSession, char *BootVariables, char *BootVar
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting\n");
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -2351,7 +2354,7 @@ int SetBootConfig(IPMI20_SESSION_T *hSession, char *BootVar, char *BootVal)
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting\n");
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -2383,7 +2386,7 @@ int SetBootConfig(IPMI20_SESSION_T *hSession, char *BootVar, char *BootVal)
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting\n");
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -2502,7 +2505,7 @@ int GetAllBootVars(IPMI20_SESSION_T *hSession, unsigned char *BootVars, INT16U *
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting\n");
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -2534,7 +2537,7 @@ int GetAllBootVars(IPMI20_SESSION_T *hSession, unsigned char *BootVars, INT16U *
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting\n");
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -2965,7 +2968,7 @@ int GetFeatureStatus(IPMI20_SESSION_T *hSession, char *featureName)
 #endif
     BYTE ResBuf[MAX_RES_SIZE] = {0};
     int ResLen, retVal;
-    BYTE CompCode;
+    uint16 CompCode;
 
     if (byMedium != KCS_MEDIUM)
     {

@@ -1,7 +1,14 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33801.447
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Yafuflash", "Yafuflash.vcxproj", "{5CBA0C6E-5FDD-4826-9F4E-B6BDE50AEE48}"
+	ProjectSection(ProjectDependencies) = postProject
+		{63EC4AC0-EF70-428B-8E23-FFF1F4226723} = {63EC4AC0-EF70-428B-8E23-FFF1F4226723}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LIBIPMI", "..\..\libipmi_sw-2.5.0-ANY\Win\LIBIPMI.vcxproj", "{63EC4AC0-EF70-428B-8E23-FFF1F4226723}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,8 +26,19 @@ Global
 		{5CBA0C6E-5FDD-4826-9F4E-B6BDE50AEE48}.Release|Win32.Build.0 = Release|Win32
 		{5CBA0C6E-5FDD-4826-9F4E-B6BDE50AEE48}.Release|x64.ActiveCfg = Release|x64
 		{5CBA0C6E-5FDD-4826-9F4E-B6BDE50AEE48}.Release|x64.Build.0 = Release|x64
+		{63EC4AC0-EF70-428B-8E23-FFF1F4226723}.Debug|Win32.ActiveCfg = Debug|Win32
+		{63EC4AC0-EF70-428B-8E23-FFF1F4226723}.Debug|Win32.Build.0 = Debug|Win32
+		{63EC4AC0-EF70-428B-8E23-FFF1F4226723}.Debug|x64.ActiveCfg = Debug|x64
+		{63EC4AC0-EF70-428B-8E23-FFF1F4226723}.Debug|x64.Build.0 = Debug|x64
+		{63EC4AC0-EF70-428B-8E23-FFF1F4226723}.Release|Win32.ActiveCfg = Release|Win32
+		{63EC4AC0-EF70-428B-8E23-FFF1F4226723}.Release|Win32.Build.0 = Release|Win32
+		{63EC4AC0-EF70-428B-8E23-FFF1F4226723}.Release|x64.ActiveCfg = Release|x64
+		{63EC4AC0-EF70-428B-8E23-FFF1F4226723}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C8812F6E-54D2-4ACD-B36A-5F8A2DF98D72}
 	EndGlobalSection
 EndGlobal
