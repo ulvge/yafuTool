@@ -236,7 +236,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
     int ModuleFound = 0, Config = 0, Extlog = 0, BootPreserve = 0, ConfigPreserve = 0, ExtlogPreserve = 0;
     INT32U Offset = 0;
     INT16U Datalen = 0;
-    char *Buf = 0;
+    unsigned char *Buf = 0;
     INT8U Count = 0, ReadConf = 0, ReadBkupConf = 0;
     int RetVal = 0, i = 0, j = 0;
     int Percentage = 100;
@@ -249,7 +249,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
         firsttime = 1;
     if (firsttime)
     {
-        if (RecoveryFlashMode == 0x00)
+        if (RecoveryFlashMode == 0x00)//yes
         {
             if (MemoryAllocation(hSession, SizetoAlloc) != 0 || AddofAllocMem == 0xffffffff)
             {
@@ -260,7 +260,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
             {
                 return 1;
             }
-            if (Parsing.Full == 0x01)
+            if (Parsing.Full == 0x01)//no exec; = 0
             {
                 if (Parsing.Silent == 0x01)
                 {
@@ -273,7 +273,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
         }
 
         Offset = UpgradedBytes;
-        while (Offset < (UpgradedBytes + SizeToFlash))
+        while (Offset < (UpgradedBytes + SizeToFlash)) //UpgradedBytes:0 SizeToFlash = 0x00e600d2=14.37M
         {
             AddofAllocMem += SizeToRead;
 
@@ -291,7 +291,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
             else
             {
                 SizeToRead = MAX_SIZE_TO_READ;
-                if ((SPIDevice == CPLD_FLASH) && (Offset + MAX_SIZE_TO_READ) > SizeToFlash)
+                if ((Offset + MAX_SIZE_TO_READ) > SizeToFlash)
                 {
                     SizeToRead = SizeToFlash - Offset;
                 }
@@ -301,13 +301,29 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
             memset(Buf, 0, SizeToRead);
             if (fseek(img, seekpos, SEEK_SET) != 0)
                 printf("Error in fseek\n");
-            if (fread(Buf, 1, SizeToRead, img) != SizeToRead)
-                printf("Error in fread \n");
+            if (fread(Buf, 1, SizeToRead, img) != SizeToRead) {
+                printf("Error in fread ...\n");
+            }
+            else {
+                static int debugBIN = 0;
+                //printf("fread data from img is success, SizeToRead = %#x, Offset = %#x\n", SizeToRead, Offset);
+                if (debugBIN){
+                    for (int d = 0; d < SizeToRead; d++) {
+                        if (d % 16 == 0) {
+                            printf("\r\n %#8x\t", Offset + d);
+                        }
+                        printf("%02x ", Buf[d]);
+                        if (d == 8) {
+                            printf("\t");
+                        }
+                    }
+                }
+            }
 
             WriteMemOff = AddofAllocMem;
             Datalen = (INT16U)SizeToRead;
 
-            if (RecoveryFlashMode == 0x01)
+            if (RecoveryFlashMode == 0x01) //no
             {
                 WriteMemOff = Offset;
             }
@@ -315,8 +331,10 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
             //printf("WritetoMemory  , FlashFirmware, line = %d\n", __LINE__);
             if (WritetoMemory(hSession, WriteMemOff, Datalen, Buf) != 0)
             {
-                if (RecoveryFlashMode == 0x00)
+                if (RecoveryFlashMode == 0x00){
                     MemoryDealloc(hSession, MemOffset);
+                }
+                printf("\r\n WritetoMemory :failed\r\n");
                 return -1;
             }
             if (Parsing.Silent == 0x00)
@@ -807,7 +825,7 @@ int FullFlashThreadFn(IPMI20_SESSION_T *hSession, FILE *img, int Config, int Boo
             return -1;
         }
     }
-    if ((1 == Parsing.versioncmpflash) && (0 == VersionCmpFlash(ModNo, &Modver)))
+    if ((1 == Parsing.versioncmpflash) && (0 == VersionCmpFlash(ModNo, &Modver))) // not exec
     {
         if (1 == Parsing.SplitImg)
         {
@@ -866,7 +884,7 @@ int FullFlashThreadFn(IPMI20_SESSION_T *hSession, FILE *img, int Config, int Boo
             Parsing.versioncmpflash = 1;
         }
 
-        if ((Parsing.Full == 0x01) || (CPLD_FLASH == SPIDevice) || (BIOS_FLASH == SPIDevice))
+        if ((Parsing.Full == 0x01) || (CPLD_FLASH == SPIDevice) || (BIOS_FLASH == SPIDevice)) //yes
         {
             SizeToFlash = NewImageSize;
             if ((retval = FlashFirmware(hSession, img, SizeToFlash, UpgradedBytes, seekpos)) != 0)
@@ -1326,7 +1344,7 @@ int ModuleUpgrade(IPMI20_SESSION_T *hSession, FILE *img, int Module, int FlashFl
                 {
                     WriteMemOff = Offset;
                 }
-                printf("WritetoMemory  , ModuleUpgrade, line = %d\n", __LINE__);
+                //printf("WritetoMemory  , ModuleUpgrade, line = %d\n", __LINE__);
                 if (WritetoMemory(hSession, WriteMemOff, Datalen, Buf) != 0)
                 {
                     if (RecoveryFlashMode == 0x00)

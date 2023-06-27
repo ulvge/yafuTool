@@ -190,7 +190,7 @@ typedef struct
      int ConfigPreserveBitMask;
      int IgnoreExisting;
      int  Interactive;
-     int  Full;
+     int  Full;//  0x01: Uploading; else upgrading
      int Auto;
      int Info;
      int UsbMedium;

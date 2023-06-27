@@ -5020,8 +5020,10 @@ switch_device:
             return -1;
         }
 
-        if (EraseBlkSize == 0)
-            printf("Error!! The EraseBlkSize = 0.\n");
+        if (EraseBlkSize == 0) {
+            printf("Error!! BMC not detected the BIOS chip\n");
+            return -1;
+        }
 
         if ((NewImageSize % EraseBlkSize) == SIGNED_HASHED_LEGACY_IMG_BYTES)
         {
@@ -5033,7 +5035,7 @@ switch_device:
         }
         else
         {
-            ImageSize = NewImageSize;
+            ImageSize = NewImageSize; //0x00e600d2
         }
 
         if ((SPIDevice == BMC_FLASH) && (VerifyImageChecksum(ImageSize, Buffer, ModuleCount) != 0))
@@ -5044,7 +5046,7 @@ switch_device:
         }
     }
 
-    retval = FirmwareInfo(&hSession, Parsing.FileName);
+    retval = FirmwareInfo(&hSession, Parsing.FileName); //only check BMC
     if (retval != 0)
     {
         if (retval == -1)

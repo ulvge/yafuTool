@@ -393,7 +393,14 @@ int ActivateFlashMode(IPMI20_SESSION_T *hSession)
         errVal = IPMICMD_AMIYAFUActivateFlashMode(hSession, pAMIYAFUActivateFlashReq, &pAMIYAFUActivateFlashRes, RECIEVE_TIME_OUT);
         if (pAMIYAFUActivateFlashRes.CompletionCode == YAFU_CC_DEV_IN_FIRMWARE_UPDATE_MODE)
         {
-            printf("Warning: Device is already in Firmware Update Mode...\n");
+            printf("Warning: Device is already in Firmware Update Mode.\n");
+            
+            /*pAMIYAFUActivateFlashReq->ActivateflashReq.YafuCmd = CMD_AMI_YAFU_DEACTIVATE_FLASH_MODE;
+            pAMIYAFUActivateFlashReq->ActivateflashReq.CRC32chksum = CalculateChksum((char*)&pAMIYAFUActivateFlashReq->Mode, sizeof(INT16U));
+            errVal = IPMICMD_AMIYAFUDeactivateFlash(hSession, pAMIYAFUActivateFlashReq, &pAMIYAFUActivateFlashRes, 3000);
+            errVal = LIBIPMI_HL_AMIDeactivateFlashMode(hSession, 3000);*/
+            errVal = DeactivateFlshMode(hSession);
+            printf("Warning: Device exist Firmware Update Mode, errVal2 = %d\n", errVal);
             exit(YAFU_CC_DEV_IN_FIRMWARE_UPDATE_MODE);
         }
         if (errVal != 0)
@@ -424,7 +431,7 @@ int ActivateFlashMode(IPMI20_SESSION_T *hSession)
                 retVal = SendTimedImbpRequest(&IfcReqHdr, 6000, ResBuf, &ResLen, &CompCode);
                 if (CompCode == YAFU_CC_DEV_IN_FIRMWARE_UPDATE_MODE)
                 {
-                    printf("Warning: Device is already in Firmware Update Mode...\n");
+                    printf("Warning: Device is already in Firmware Update Mode..\n");
                     exit(YAFU_CC_DEV_IN_FIRMWARE_UPDATE_MODE);
                 }
 
@@ -912,7 +919,7 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
     ResLen = sizeof(AMIYAFUWriteMemoryRes_T);
 
     if (AddofAlloc == 0x9e3fb008) {
-        printf("\n WritetoMemory  start , AddofAlloc=%#llx", AddofAlloc);
+        //printf("\n WritetoMemory  start , AddofAlloc=%#llx", AddofAlloc);
     }
     while (1)
     {
@@ -930,6 +937,8 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
         if (byMedium != KCS_MEDIUM)
         {
 #ifndef MSDOS
+
+            //printf("\n WritetoMemory  Datalen = %#x , AddofAlloc=%#llx\r\n", Datalen, AddofAlloc);
             errVal = IPMICMD_AMIYAFUWriteMemory(hSession, (AMIYAFUWriteMemoryReq_T *)WriteBuffer, &pAMIYAFUWriteMemoryRes, RECIEVE_TIME_OUT);
 #endif
         }
@@ -1717,7 +1726,7 @@ int VerifyStatus(IPMI20_SESSION_T *hsession_t)
 int DeactivateFlshMode(IPMI20_SESSION_T *hSession)
 {
 
-    BYTE ReqBuf[TEMP_MAX_REQ_SIZE];
+    static BYTE ReqBuf[TEMP_MAX_REQ_SIZE];
     BYTE ResBuf[MAX_RES_SIZE];
     int ResLen, ReqLen;
     BYTE CompCode;
@@ -1855,8 +1864,8 @@ int ResetDevice(IPMI20_SESSION_T *hSession, INT16U WaitTime)
  */
 int protectFlash(IPMI20_SESSION_T *hSession, INT32U Blknum, INT8U Protect)
 {
-    BYTE ReqBuf[TEMP_MAX_REQ_SIZE];
-    BYTE ResBuf[TEMP_MAX_REQ_SIZE];
+    static BYTE ReqBuf[TEMP_MAX_REQ_SIZE];
+    static BYTE ResBuf[TEMP_MAX_REQ_SIZE];
     int ResLen, ReqLen;
     BYTE CompCode;
 #ifndef MSDOS
@@ -1903,7 +1912,7 @@ int protectFlash(IPMI20_SESSION_T *hSession, INT32U Blknum, INT8U Protect)
             SET_ERR_CODE(ERR_BMC_COMM);
             return -1;
         }
-        memcpy(&pAMIYAFUProtectFlashRes.ProtectFlashRes, ResBuf, ResLen);
+        memcpy(&pAMIYAFUProtectFlashRes.ProtectFlashRes, ResBuf, ResLen);//ResLen = 0x0e£¨ø…“…
     }
     if (pAMIYAFUProtectFlashRes.ProtectFlashRes.YafuCmd == CMD_AMI_YAFU_COMMON_NAK)
     {
@@ -2744,7 +2753,7 @@ int SetAllPreserveConfStatus(IPMI20_SESSION_T *hSession, unsigned short Status)
     BYTE ReqBuf[TEMP_MAX_REQ_SIZE] = {0};
     BYTE ResBuf[MAX_RES_SIZE] = {0};
     int ResLen = 0, retry;
-    BYTE CompCode;
+    BYTE CompCode = 0;
 
     SetAllPreserveConfigReq_T *pSetAllPreserveConfigReq;
     pSetAllPreserveConfigReq = (SetAllPreserveConfigReq_T *)ReqBuf;
