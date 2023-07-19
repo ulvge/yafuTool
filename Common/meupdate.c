@@ -298,7 +298,7 @@ int StartDoMEUpdate(IPMI20_SESSION_T *hSession)
 
     if (SwitchFlashDevice(hSession, &MEEraseBlkSize, &MEFlashSize) < 0)
     {
-        printf("Error in identifying the Flash information\n");
+        printf("Error in identifying the Flash information, DoM\n");
 #ifdef ICC_OS_LINUX
         LoadOpenIPMIDrivers();
 #endif

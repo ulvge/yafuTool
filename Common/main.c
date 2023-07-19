@@ -4223,7 +4223,7 @@ int DoMMCUpdate(IPMI20_SESSION_T *hSession)
     SPIDevice = 8; // For MMC Image Update
     if (SwitchFlashDevice(hSession, &EraseBlkSize, &FlashSize) < 0)
     {
-        printf("Error in identifying the Flash information\n");
+        printf("Error in identifying the Flash information, DoMMC\n");
 #ifdef ICC_OS_LINUX
         LoadOpenIPMIDrivers();
 #endif
@@ -4559,14 +4559,26 @@ int CreateMMCImage()
     fclose(fp);
     return 0;
 }
-
+#include <signal.h>
+IPMI20_SESSION_T hSession;
+IPMI20_SESSION_T* phSession = NULL;
+void sigint_handler(int signal) {
+    printf("接收到 SIGINT 信号，进行一些处理...signal = %d\n", signal);
+    if (phSession) {
+        if (DeactivateFlshMode(phSession) != 0)
+        {
+            printf("\nError in Deactivate Flash mode\n");
+        }
+    }
+    exit(1);
+}
 int main(int argc, char *argv[])
 {
+    signal(SIGINT, sigint_handler);
     int errVal = 0, Updateconfig = 0, check = 0, Ret = 0;
     INT16U i = 0;
     char username[64] = {0}, pass[64] = {0}, Choice[MAX_INPUT_LEN] = {0};
     char *BootVarsName = 0;
-    IPMI20_SESSION_T hSession;
 #ifndef MSDOS
     char *pPass = NULL, *pUser = NULL;
     int Enable_success = 0;
@@ -4599,6 +4611,7 @@ int main(int argc, char *argv[])
 
     memset((void *)&Parsing, 0, sizeof(UPDATE_INFO));
     memset((void *)&hSession, 0, sizeof(IPMI20_SESSION_T));
+    phSession = &hSession;
     strcpy(username, "\0");
     strcpy(pass, "\0");
     strcpy(device, "127.0.0.1");
@@ -4980,7 +4993,7 @@ switch_device:
 #ifndef MSDOS
     if (SwitchFlashDevice(&hSession, &EraseBlkSize, &FlashSize) < 0)
     {
-        printf("Error in identifying the Flash information\n");
+        printf("Error in identifying the Flash information.,try again later\n");
 #ifdef ICC_OS_LINUX
         LoadOpenIPMIDrivers();
 #endif
