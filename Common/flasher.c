@@ -264,7 +264,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
             {
                 if (Parsing.Silent == 0x01)
                 {
-                    printf("Uploading Firmware Image ...");
+                    printf("Uploading Firmware Image 1...");
                     SilentFlash = 0x01;
                 }
                 fflush(stdout);
@@ -321,7 +321,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
             }
 
             WriteMemOff = AddofAllocMem;
-            Datalen = (INT16U)SizeToRead;
+            Datalen = (INT16U)SizeToRead; // @@
 
             if (RecoveryFlashMode == 0x01) //no
             {

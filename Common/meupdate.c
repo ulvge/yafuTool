@@ -194,7 +194,7 @@ int DoMEUpdate(IPMI20_SESSION_T *hSession)
 
         if (WritetoMemory(hSession, WriteMemOff, datalength, buffer) != 0)
         {
-            printf("Error in Uploading Firmware Image\n");
+            printf("Error in Uploading Firmware Image 4\n");
             return -1;
         }
 
@@ -226,7 +226,7 @@ int DoMEUpdate(IPMI20_SESSION_T *hSession)
 
         if (WritetoMemory(hSession, WriteMemOff, datalength, buffer) != 0)
         {
-            printf("Error in Uploading Firmware Image\n");
+            printf("Error in Uploading Firmware Image 5\n");
             return -1;
         }
 

@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>-nw -ip 192.168.0.100 -u admin -p admin -d 2 E:\5source\MDS_source\2space\ast2500evb_ns207_workspace\software\yafuflash-4.90.0-ANY\obj\Win64\Release\bios.bin</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-nw -ip 202.197.19.9 -u admin -p admin  E:\3Proj\12NS108_5.5\BMC\CPUFlashUpdate\Win64\rom_ex103_v2.ima</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommandArguments>-nw -ip 192.168.0.100 -u admin -p admin  Y:\2workspace\2space\ast2500evb_ns207_workspace\Build\output\rom.ima</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-nw -ip 202.197.19.9 -u admin -p admin E:\3Proj\12NS108_5.5\BMC\CPUFlashUpdate\Win64\rom_ex103_v2.ima</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

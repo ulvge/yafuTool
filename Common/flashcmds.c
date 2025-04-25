@@ -938,7 +938,7 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
         {
 #ifndef MSDOS
 
-            //printf("\n WritetoMemory  Datalen = %#x , AddofAlloc=%#llx\r\n", Datalen, AddofAlloc);
+            //printf("\n WritetoMemory  Datalen = %#x , AddofAlloc=%#llx\r\n", Datalen, AddofAlloc);// èµ°è¿™ä¸ªåˆ†æ”¯ 
             errVal = IPMICMD_AMIYAFUWriteMemory(hSession, (AMIYAFUWriteMemoryReq_T *)WriteBuffer, &pAMIYAFUWriteMemoryRes, RECIEVE_TIME_OUT);
 #endif
         }
@@ -961,7 +961,7 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
 
             if (RetryCount == 1)
             {
-                printf("\nWarning: WritetoMemory failed RetryCount at 1,errVal = %d \n", errVal);
+                printf("\nWarning: WritetoMemory failed RetryCount at 1,errVal = %d, will try again \n", errVal);
             } else if (RetryCount <= RETRYCOUNT)
             {
                 if (vdbg)
@@ -1912,7 +1912,7 @@ int protectFlash(IPMI20_SESSION_T *hSession, INT32U Blknum, INT8U Protect)
             SET_ERR_CODE(ERR_BMC_COMM);
             return -1;
         }
-        memcpy(&pAMIYAFUProtectFlashRes.ProtectFlashRes, ResBuf, ResLen);//ResLen = 0x0e£¬¿ÉÒÉ
+        memcpy(&pAMIYAFUProtectFlashRes.ProtectFlashRes, ResBuf, ResLen);//ResLen = 0x0eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     }
     if (pAMIYAFUProtectFlashRes.ProtectFlashRes.YafuCmd == CMD_AMI_YAFU_COMMON_NAK)
     {

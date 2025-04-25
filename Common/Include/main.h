@@ -134,7 +134,10 @@ extern HANDLE m_hD;
 #define MAX_UBOOT_VAR_COUNT             64
 #define MAX_UBOOT_VAR_LENGTH            320
 #define MAX_UBOOT_VAR_NAME_LENGTH       32
-#define MAX_SIZE_TO_READ                0x4000
+// 1，受限于 Datalen = (INT16U)SizeToRead; 
+// 2，受限于 if(dwReqDataLen<=MAX_IPMI_MESSAGE_SIZE) ；
+// 3，受限于 (MAX_REQUEST_SIZE - sizeof(RMCPHdr_T) - sizeof(SessionHdr2_T))) libipmi_network_session.c
+#define MAX_SIZE_TO_READ                0xEF00 
 #define RECIEVE_TIME_OUT                5000
 #define MAX_FILE_LEN                    20
 #define MAX_BKUP_LEN                    5
@@ -227,7 +230,7 @@ typedef struct
      int versioncmpflash;
      unsigned char ActivateNode;
      int DoMMCImgUpdate; /*rom.ima*/
-     int DoSPIImgUpdate;	/*mmc.ima*/
+     int DoSPIImgUpdate;	/*mmc.ima  Y  */
      int UpdateSPIImage; /*rom_component.ima*/
      int UpdateMMCImage; /*mmc_component.ima*/	 
 } UPDATE_INFO;
@@ -494,7 +497,8 @@ Flash the MMC using INI File                                        :# Yafuflash
 "
 
 /*Serial Medium:\n\
-Flash the Firmware with Serial Medium                               : # Yafuflash -serial -term xxxxx:yyyyyy -u admin -p admin rom.ima\n\*/
+Flash the Firmware with Serial Medium                               : # Yafuflash -serial -term xxxxx:yyyyyy -u admin -p admin rom.ima\n\
+*/
 #else   
 #define STR_EXAMPLE "\
 EXAMPLES : \n\

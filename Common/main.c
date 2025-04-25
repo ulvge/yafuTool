@@ -158,6 +158,7 @@ unsigned long EraseBlkSize = 0, FlashSize = 0;
 #endif
 char device[46];
 INT8U byAuthType = 0x00;
+uint8 byEncryption = 0;
 INT8U byMedium = 0;
 int SPIDevice = 0;
 int IsRunLevelON = 0;
@@ -2450,7 +2451,7 @@ int ModLocationChkAndUpgrade(IPMI20_SESSION_T *hSession, int Module, int CurNumM
         Parsing.Full = 0x01;
         while (1)
         {
-            printf("So,Type (Y/y) to do Full Firmware Upgrade or (N/n) to exit\n");
+            printf("So,Type (Y/y) to do Full Firmware Upgrade or (N/n) to exit 1\n");
             printf("Enter your Option : ");
             scanf(" %[^\n]%*c", FlashChoice);
             if (strcmp(FlashChoice, "y") == 0 || strcmp(FlashChoice, "Y") == 0)
@@ -2654,7 +2655,7 @@ int AutoFirmwareFlashing(IPMI20_SESSION_T *hSession)
                 printf("The Images are different. \n ");
             else
                 printf("The Images are different. Use '-info' Option to know more \n");
-            printf("So,Type (Y/y) to do Full Firmware Upgrade or (N/n) to exit\n");
+            printf("So,Type (Y/y) to do Full Firmware Upgrade or (N/n) to exit 2\n");
             printf("Enter your Option : ");
             scanf(" %[^\n]%*c", FlashChoice);
             if (strcmp(FlashChoice, "y") == 0 || strcmp(FlashChoice, "Y") == 0)
@@ -4290,7 +4291,7 @@ int DoMMCUpdate(IPMI20_SESSION_T *hSession)
         printf("WritetoMemory  , DoMMCUpdate, line = %d\n", __LINE__);
         if (WritetoMemory(hSession, WriteMemOff, Datalength, Buf) != 0)
         {
-            printf("Error in Uploading Firmware Image\n");
+            printf("Error in Uploading Firmware Image 2\n");
             return -1;
         }
 
@@ -4322,7 +4323,7 @@ int DoMMCUpdate(IPMI20_SESSION_T *hSession)
         printf("WritetoMemory  , DoMMCUpdate, line = %d\n", __LINE__);
         if (WritetoMemory(hSession, WriteMemOff, Datalength, Buf) != 0)
         {
-            printf("Error in Uploading Firmware Image\n");
+            printf("Error in Uploading Firmware Image 4\n");
             return -1;
         }
         printf("Upgrading Firmware Image : %d%%\r", (int)((offset1 * 100) / NewImageSize1));
@@ -4560,21 +4561,9 @@ int CreateMMCImage()
     return 0;
 }
 #include <signal.h>
-IPMI20_SESSION_T hSession;
-IPMI20_SESSION_T* phSession = NULL;
-void sigint_handler(int signal) {
-    printf("接收到 SIGINT 信号，进行一些处理...signal = %d\n", signal);
-    if (phSession) {
-        if (DeactivateFlshMode(phSession) != 0)
-        {
-            printf("\nError in Deactivate Flash mode\n");
-        }
-    }
-    exit(1);
-}
 int main(int argc, char *argv[])
 {
-    signal(SIGINT, sigint_handler);
+    signal(SIGINT, SIG_IGN);
     int errVal = 0, Updateconfig = 0, check = 0, Ret = 0;
     INT16U i = 0;
     char username[64] = {0}, pass[64] = {0}, Choice[MAX_INPUT_LEN] = {0};
@@ -4584,6 +4573,7 @@ int main(int argc, char *argv[])
     int Enable_success = 0;
     INT8U byPrivLevel;
     INT16U wRet = 0, j = 0;
+    IPMI20_SESSION_T hSession;
 #endif
 #if defined(__x86_64__) || defined(WIN64)
     unsigned int ImageSize = 0;
@@ -4611,7 +4601,6 @@ int main(int argc, char *argv[])
 
     memset((void *)&Parsing, 0, sizeof(UPDATE_INFO));
     memset((void *)&hSession, 0, sizeof(IPMI20_SESSION_T));
-    phSession = &hSession;
     strcpy(username, "\0");
     strcpy(pass, "\0");
     strcpy(device, "127.0.0.1");
@@ -4669,7 +4658,7 @@ int main(int argc, char *argv[])
         {
             Enable_success = 0;
             wRet = LIBIPMI_Create_IPMI20_Session(&hSession, device, Parsing.Portnum, pUser, pPass,
-                                                 byAuthType, 1, 1, &byPrivLevel,
+                                                 byAuthType, byEncryption, 1, &byPrivLevel,
                                                  byMedium, 0xc2, 0x20, NULL, 0, 3000);
             if (wRet != LIBIPMI_E_SUCCESS)
             {
@@ -4929,7 +4918,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    if (Parsing.ImgInfo == 0 && SPIDevice == BMC_FLASH)
+    if (Parsing.ImgInfo == 0 && SPIDevice == BMC_FLASH) // yes
     {
         Ret = ConfirmDualImageSupport(&hSession);
         if (Ret != 0)
@@ -5002,7 +4991,7 @@ switch_device:
     }
 #endif
     EraseBlkSize = 0;
-    FlashSize = 0;
+    FlashSize = 0; // 32M
     if (FlashInfo(&hSession, &EraseBlkSize, &FlashSize) != 0)
     {
         printf("Error in Getting FlashInfo \n");
@@ -5193,13 +5182,13 @@ to reboot since it goes to init7
         }
     }
 
-    if (FwUploadImg == IMAGE_2 && FlashBothImg == TRUE)
+    if (FwUploadImg == IMAGE_2 && FlashBothImg == TRUE) // NO
     {
         // Do the changes to switch the structure to proceed further
         ToggleDualFMHInfo();
     }
 
-    if (RecoveryFlashMode)
+    if (RecoveryFlashMode) //NO
     {
         if (NewImageSize % EraseBlkSize == SIGNED_HASHED_LEGACY_IMG_BYTES)
         {
@@ -5222,7 +5211,7 @@ to reboot since it goes to init7
         goto dualfwflash;
     }
 
-    if ((Parsing.SkipFMHCheck == 0x01) || (Parsing.SkipCRCValidation == 0x01))
+    if ((Parsing.SkipFMHCheck == 0x01) || (Parsing.SkipCRCValidation == 0x01)) // NO
     {
         Parsing.Full = 0x01;
         Parsing.Info = 0x01;
@@ -5243,7 +5232,7 @@ to reboot since it goes to init7
         printf("Validating the Checksum for the Image\n");
     }
 
-    if ((Parsing.Info == 0x01) || (Parsing.ImgInfo != 0))
+    if ((Parsing.Info == 0x01) || (Parsing.ImgInfo != 0)) // NO
     {
         if (FlashFMH != 0)
         {
@@ -5272,7 +5261,7 @@ to reboot since it goes to init7
     }
 
     // update both images if uboot versions mismatch in dual image case.
-    if (DualImageSup && (!featuresList.do_not_upgrade_both_firmware_on_uboot_mismatch))
+    if (DualImageSup && (!featuresList.do_not_upgrade_both_firmware_on_uboot_mismatch)) // NO
     {
         if (Check_DualImagebootVersions(&hSession) == 1)
         {
@@ -5432,7 +5421,7 @@ dualfwflash:
                 else
                 {
                     printf("Module name is not given with -flash- \n");
-                    printf("So,Type (Y/y) to do Full Firmware Upgrade or (N/n) to exit\n");
+                    printf("So,Type (Y/y) to do Full Firmware Upgrade or (N/n) to exit 3\n");
                     printf("Enter your Option : ");
                     scanf(" %[^\n]%*c", FlashChoice);
                     if (spstrcasecmp(FlashChoice, "y") == 0)
@@ -5478,7 +5467,7 @@ dualfwflash:
 
                     if ((!non_interactive) && (Parsing.DiffImage == 0) && (!RecoveryFlashMode) && (Parsing.PlatformCheck == 0))
                     {
-                        printf("So,Type (Y/y) to do Full Firmware Upgrade or (N/n) to exit\n");
+                        printf("So,Type (Y/y) to do Full Firmware Upgrade or (N/n) to exit 4\n");
                         printf("Enter your Option : ");
                         scanf(" %[^\n]%*c", FlashChoice);
                     }
@@ -5589,7 +5578,7 @@ dualfwflash:
                     check = 2;
                     if ((!non_interactive) && (Parsing.ModLocation == 0) && (!RecoveryFlashMode) && (Parsing.DiffImage == 0))
                     {
-                        printf("So,Type (Y/y) to do Full Firmware Upgrade or (N/n) to exit\n");
+                        printf("So,Type (Y/y) to do Full Firmware Upgrade or (N/n) to exit 5\n");
                         printf("Enter your Option : ");
                         scanf(" %[^\n]%*c", FlashChoice);
                     }
@@ -5628,20 +5617,20 @@ dualfwflash:
                 }
                 else
                 {
-                    printf("Existing Image and Current Image are Same\n");
+                    printf("Existing Image and Current Image are Same ,both is single image, not dual\n");
                 }
                 if (IsValidHPMImage)
                 {
                     goto fwflash;
                 }
-                while (1)
+                while (1) // choice Y/N
                 {
                     if ((!non_interactive) && (Parsing.SameImage == 0) && (!RecoveryFlashMode))
                     {
                         if (Blockselect)
                             printf("So,Type (Y/y) to do Full Firmware Upgrade By Block or (N/n) to exit\n");
                         else
-                            printf("So,Type (Y/y) to do Full Firmware Upgrade or (N/n) to exit\n");
+                            printf("So,Type (Y/y) to do Full Firmware Upgrade or (N/n) to exit 6\n");
                         if (1 == Parsing.versioncmpflash)
                         {
                             Parsing.versioncmpflash = 2;
@@ -5675,7 +5664,7 @@ dualfwflash:
         }
     fwflash:
 
-        if ((Parsing.UpdateMMCImage == 0) && (Parsing.UpdateSPIImage == 0) && (IsValidHPMImage))
+        if ((Parsing.UpdateMMCImage == 0) && (Parsing.UpdateSPIImage == 0) && (IsValidHPMImage)) // NO
         {
             while (1)
             {
@@ -5909,7 +5898,7 @@ dualfwflash:
                                         printf("So,Type (Y/y) to Update UBOOT\n");
                                         printf("or (N/n) to Skip\n");
                                         printf("Enter your Option : ");
-                                        scanf(" %[^\n]%*c", FlashChoice);
+                                        scanf(" %[^\n]%*c", FlashChoice); // 
                                     }
                                     else
                                     {

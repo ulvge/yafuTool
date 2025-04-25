@@ -94,7 +94,8 @@
 #define MAX_GETBOOTVAR 400
 #define MAX_GETBOOTVAL 400
 #define YAFU_HEADER_SIZE          12
-#define MAX_WRITEBUFLEN          0x5000
+//#define MAX_SIZE_TO_READ                0xF000
+#define MAX_WRITEBUFLEN          0xF000 // 参考上面的分包大小
 #define GETCURACTIVEIMG   0x7
 #define SETFWUPLOADSELECTOR         0x3
 #define GETFWUPLOADSELECTOR         0x4
