@@ -4298,7 +4298,7 @@ int DoMMCUpdate(IPMI20_SESSION_T *hSession)
         offset1 = Offset;
         NewImageSize1 = NewImageSize;
 
-        printf("Uploading Firmware Image : %d%%\r", (int)((offset1 * 100) / NewImageSize1));
+        printf("main Uploading Firmware Image : %d%%\r", (int)((offset1 * 100) / NewImageSize1));
         Offset += SizeToRead;
         seekpos += SizeToRead;
         MMCAddofAllocMem += SizeToRead;

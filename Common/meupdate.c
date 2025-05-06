@@ -200,7 +200,7 @@ int DoMEUpdate(IPMI20_SESSION_T *hSession)
 
         offset += SizetoRead;
 
-        printf("Uploading Firmware Image : %d%%\r", (int)((offset * 100) / MENewImageSize));
+        printf("meupdate Uploading Firmware Image : %d%%\r", (int)((offset * 100) / MENewImageSize));
 
         MEAddofAllocMem += SizetoRead;
         seekoffset += SizetoRead;

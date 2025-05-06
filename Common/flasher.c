@@ -341,11 +341,11 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
             {
                 if (Parsing.Full == 0x01)
                 {
-                    printf("\rUploading Firmware Image : %d%%\r", (int)((Offset * 100) / NewImageSize));
+                    printf("\rflasher Uploading Firmware Image 1: %d%%\r", (int)((Offset * 100) / NewImageSize));
                 }
                 else
                 {
-                    printf("\rUpgrading Firmware Image : %d%%\r", (int)((Offset * 100) / NewImageSize));
+                    printf("\rflasher Upgrading Firmware Image : %d%%\r", (int)((Offset * 100) / NewImageSize));
                 }
                 fflush(stdout);
             }
@@ -371,7 +371,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
     if (Parsing.Full == 0x01)
     {
         if (Parsing.Silent == 0x00)
-            printf("Uploading Firmware Image : %d%%... done\n", (int)(Percentage));
+            printf("flasher Uploading Firmware Image : %d%%... done\n", (int)(Percentage));
         else
             printf("\rUploading Firmware Image ...  Done");
 
@@ -418,7 +418,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
             /* If preserve flag is enabled and module is not duplicated ( count of individual section is not greater than 1 ) then preserve that module*/
             if ((spstrcasecmp((char *)FwModuleHdr[i]->ModuleName, "boot") == 0) && BootPreserve == 1)
             {
-                printf("Skipping [%s] Module ....\n", (char *)FwModuleHdr[i]->ModuleName);
+                printf("Skipping [%s] Module 1....\n", (char *)FwModuleHdr[i]->ModuleName);
                 if ((ImgOpt == -1) && (Parsing.ConfigPreserve == 1))
                 {
                     for (Count = 0; Count < ModuleCount; Count++)
@@ -450,17 +450,17 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
             }
             else if ((spstrcasecmp(FwModuleName, "boot_img") == 0) && BootPreserve == 1)
             {
-                printf("Skipping [%s] Module ....\n", (char *)FwModuleHdr[i]->ModuleName);
+                printf("Skipping [%s] Module 2 ....\n", (char *)FwModuleHdr[i]->ModuleName);
                 continue;
             }
             else if ((spstrcasecmp((char *)FwModuleHdr[i]->ModuleName, "conf") == 0) && (ConfigPreserve == 1) && (ImgOpt != -1))
             {
-                printf("Skipping [%s] Module ....\n", (char *)FwModuleHdr[i]->ModuleName);
+                printf("Skipping [%s] Module 3 ....\n", (char *)FwModuleHdr[i]->ModuleName);
                 continue;
             }
             else if ((spstrcasecmp((char *)FwModuleHdr[i]->ModuleName, "extlog") == 0) && ExtlogPreserve == 1)
             {
-                printf("Skipping [%s] Module ....\n", (char *)FwModuleHdr[i]->ModuleName);
+                printf("Skipping [%s] Module 4 ....\n", (char *)FwModuleHdr[i]->ModuleName);
                 continue;
             }
 

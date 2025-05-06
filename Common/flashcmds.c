@@ -1349,12 +1349,12 @@ int ECFStatus(IPMI20_SESSION_T *hSession)
             {
                 if (ActualConfig == 1)
                 {
-                    printf("\rFlashing  Firmware Image : %d%%", (int)(ECFPercent + ((((pAMIYAFUGetECFStatusRes.Progress * ActualSizetoCopy) / 100) * 100) / ActualCopySize)));
+                    printf("\rFlashing  Firmware Image ECFProgress 0: %d%%", (int)(ECFPercent + ((((pAMIYAFUGetECFStatusRes.Progress * ActualSizetoCopy) / 100) * 100) / ActualCopySize)));
                     if (pAMIYAFUGetECFStatusRes.Status == YAFU_ECF_SUCCESS)
                     {
                         if (ECFPercent > 0)
                         {
-                            printf("\rFlashing  Firmware Image : %d%%... done\n", (int)(ECFPercent + ((((pAMIYAFUGetECFStatusRes.Progress * ActualSizetoCopy) / 100) * 100) / ActualCopySize)));
+                            printf("\rFlashing  Firmware Image ECFProgress 1: %d%%... done\n", (int)(ECFPercent + ((((pAMIYAFUGetECFStatusRes.Progress * ActualSizetoCopy) / 100) * 100) / ActualCopySize)));
                         }
                         ECFPercent = (INT16U)((((pAMIYAFUGetECFStatusRes.Progress * ActualSizetoCopy) / 100) * 100) / ActualCopySize) + 1;
                         break;
@@ -1381,15 +1381,15 @@ int ECFStatus(IPMI20_SESSION_T *hSession)
                             cpld_flash_status = 0;
                     }
                     else
-                        printf("\rFlashing  Firmware Image : %d%%", pAMIYAFUGetECFStatusRes.Progress);
+                        printf("\rFlashing  Firmware Image ECFProgress 2: %d%%", pAMIYAFUGetECFStatusRes.Progress);
 
                     if (pAMIYAFUGetECFStatusRes.Progress >= 100)
                     {
-                        printf("\rFlashing  Firmware Image : %d%%... done", pAMIYAFUGetECFStatusRes.Progress);
+                        printf("\rFlashing  Firmware Image ECFProgress 3: %d%%... done", pAMIYAFUGetECFStatusRes.Progress);
                     }
                     if (pAMIYAFUGetECFStatusRes.Status == YAFU_ECF_SUCCESS)
                     {
-                        printf("\rFlashing  Firmware Image : 100%%... done\n");
+                        printf("\rFlashing  Firmware Image ECFProgress 4: 100%%... done\n");
                         break;
                     }
                 }
@@ -1415,10 +1415,10 @@ int ECFStatus(IPMI20_SESSION_T *hSession)
                 }
             }
 
-            printf("\rFlashing  Firmware Image : %d%%", pAMIYAFUGetECFStatusRes.Progress);
+            printf("\rFlashing  Firmware Image ECFProgress 5: %d%%", pAMIYAFUGetECFStatusRes.Progress);
             if (pAMIYAFUGetECFStatusRes.Progress >= 100)
             {
-                printf("\rFlashing  Firmware Image : %d%%... done\n", pAMIYAFUGetECFStatusRes.Progress);
+                printf("\rFlashing  Firmware Image ECFProgress 6: %d%%... done\n", pAMIYAFUGetECFStatusRes.Progress);
                 break;
             }
             //   sleep(1);
@@ -1618,10 +1618,10 @@ int VerifyStatus(IPMI20_SESSION_T *hsession_t)
                 // pAMIYAFUGetVerifyStatusRes = (AMIYAFUGetVerifyStatusRes_T*)ResBuf;
                 memcpy(&pAMIYAFUGetVerifyStatusRes.GetVerifyStatusRes, ResBuf, ResLen);
 
-                printf("\rVerifying Firmware Image : %d%%", pAMIYAFUGetVerifyStatusRes.Progress);
+                printf("\rVerifying Firmware Image 1: %d%%", pAMIYAFUGetVerifyStatusRes.Progress);
                 if (pAMIYAFUGetVerifyStatusRes.Progress >= 100)
                 {
-                    printf("\rVerifying Firmware Image : %d%%... done", pAMIYAFUGetVerifyStatusRes.Progress);
+                    printf("\rVerifying Firmware Image 2: %d%%... done", pAMIYAFUGetVerifyStatusRes.Progress);
                     break;
                 }
             }
@@ -1629,10 +1629,10 @@ int VerifyStatus(IPMI20_SESSION_T *hsession_t)
             {
 #ifndef MSDOS
                 errVal = IPMICMD_AMIYAFUGetVerifyStatus(hsession_t, pAMIYAFUGetVerifyStatusReq, &pAMIYAFUGetVerifyStatusRes, RECIEVE_TIME_OUT);
-                printf("\rVerifying Firmware Image : %d%%", pAMIYAFUGetVerifyStatusRes.Progress);
+                printf("\rVerifying Firmware Image 3: %d%%", pAMIYAFUGetVerifyStatusRes.Progress);
                 if (pAMIYAFUGetVerifyStatusRes.Progress >= 100)
                 {
-                    printf("\rVerifying Firmware Image : %d%%... done\n", pAMIYAFUGetVerifyStatusRes.Progress);
+                    printf("\rVerifying Firmware Image 4: %d%%... done\n", pAMIYAFUGetVerifyStatusRes.Progress);
                     break;
                 }
 #endif
@@ -1677,12 +1677,12 @@ int VerifyStatus(IPMI20_SESSION_T *hsession_t)
             {
                 if (ActualConfig == 1)
                 {
-                    printf("\rVerifying Firmware Image : %d%%", (int)(VerifyPercent + ((((pAMIYAFUGetVerifyStatusRes.Progress * ActualSizetoCopy) / 100) * 100) / ActualCopySize)));
+                    printf("\rVerifying Firmware Image 5: %d%%", (int)(VerifyPercent + ((((pAMIYAFUGetVerifyStatusRes.Progress * ActualSizetoCopy) / 100) * 100) / ActualCopySize)));
                     if (pAMIYAFUGetVerifyStatusRes.Status == YAFU_VERIFY_SUCCESS)
                     {
                         if (VerifyPercent > 0)
                         {
-                            printf("\rVerifying Firmware Image : %d%%... done\n", (int)(VerifyPercent + ((((pAMIYAFUGetVerifyStatusRes.Progress * ActualSizetoCopy) / 100) * 100) / ActualCopySize)));
+                            printf("\rVerifying Firmware Image 6: %d%%... done\n", (int)(VerifyPercent + ((((pAMIYAFUGetVerifyStatusRes.Progress * ActualSizetoCopy) / 100) * 100) / ActualCopySize)));
                         }
                         VerifyPercent = (INT16U)((((pAMIYAFUGetVerifyStatusRes.Progress * ActualSizetoCopy) / 100) * 100) / ActualCopySize) + 1;
                         break;
@@ -1690,14 +1690,14 @@ int VerifyStatus(IPMI20_SESSION_T *hsession_t)
                 }
                 else
                 {
-                    printf("\rVerifying Firmware Image : %d%%", pAMIYAFUGetVerifyStatusRes.Progress);
+                    printf("\rVerifying Firmware Image 7: %d%%", pAMIYAFUGetVerifyStatusRes.Progress);
                     if (pAMIYAFUGetVerifyStatusRes.Progress >= 100)
                     {
-                        printf("\rVerifying Firmware Image : %d%%... done", pAMIYAFUGetVerifyStatusRes.Progress);
+                        printf("\rVerifying Firmware Image 8: %d%%... done", pAMIYAFUGetVerifyStatusRes.Progress);
                     }
                     if (pAMIYAFUGetVerifyStatusRes.Status == YAFU_VERIFY_SUCCESS)
                     {
-                        printf("\rVerifying Firmware Image : 100%%... done\n");
+                        printf("\rVerifying Firmware Image 9: 100%%... done\n");
                         break;
                     }
                 }
