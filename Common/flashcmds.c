@@ -1289,6 +1289,8 @@ int ECFStatus(IPMI20_SESSION_T *hSession)
     pAMIYAFUGetECFStatusReq->GetECFStatusReq.Seqnum = 0x00000001;
     pAMIYAFUGetECFStatusReq->GetECFStatusReq.YafuCmd = CMD_AMI_YAFU_GET_ECF_STATUS;
     pAMIYAFUGetECFStatusReq->GetECFStatusReq.CRC32chksum = 0x00;
+    
+    DWORD start_time = GetTickCount();
     while (1)
     {
         if (byMedium != KCS_MEDIUM)
@@ -1424,6 +1426,10 @@ int ECFStatus(IPMI20_SESSION_T *hSession)
             //   sleep(1);
         }
     }
+    DWORD end_time = GetTickCount();
+    DWORD elapsed_time = end_time - start_time; // 毫秒
+    
+    printf("Time elapsed: %.2fs\r\n", elapsed_time / 1000.0); // 2位小数
     return 0;
 }
 /*

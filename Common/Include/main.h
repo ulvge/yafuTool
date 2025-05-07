@@ -188,7 +188,7 @@ typedef struct
      int PasswordExist;
      int UserNameExist;
      int ModuleUpgrade;
-     int BootPreserve;
+     int BootPreserve; // 0x01: Skipping; else update flash
      int ConfigPreserve;
      int ConfigPreserveBitMask;
      int IgnoreExisting;

@@ -418,7 +418,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
             /* If preserve flag is enabled and module is not duplicated ( count of individual section is not greater than 1 ) then preserve that module*/
             if ((spstrcasecmp((char *)FwModuleHdr[i]->ModuleName, "boot") == 0) && BootPreserve == 1)
             {
-                printf("Skipping [%s] Module 1....\n", (char *)FwModuleHdr[i]->ModuleName);
+                printf("Skipping boot Module [%s] ....\n", (char *)FwModuleHdr[i]->ModuleName);
                 if ((ImgOpt == -1) && (Parsing.ConfigPreserve == 1))
                 {
                     for (Count = 0; Count < ModuleCount; Count++)
@@ -450,17 +450,17 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
             }
             else if ((spstrcasecmp(FwModuleName, "boot_img") == 0) && BootPreserve == 1)
             {
-                printf("Skipping [%s] Module 2 ....\n", (char *)FwModuleHdr[i]->ModuleName);
+                printf("Skipping boot_img Module [%s] ....\n", (char *)FwModuleHdr[i]->ModuleName);
                 continue;
             }
             else if ((spstrcasecmp((char *)FwModuleHdr[i]->ModuleName, "conf") == 0) && (ConfigPreserve == 1) && (ImgOpt != -1))
             {
-                printf("Skipping [%s] Module 3 ....\n", (char *)FwModuleHdr[i]->ModuleName);
+                printf("Skipping conf Module [%s] ....\n", (char *)FwModuleHdr[i]->ModuleName);
                 continue;
             }
             else if ((spstrcasecmp((char *)FwModuleHdr[i]->ModuleName, "extlog") == 0) && ExtlogPreserve == 1)
             {
-                printf("Skipping [%s] Module 4 ....\n", (char *)FwModuleHdr[i]->ModuleName);
+                printf("Skipping extlog Module [%s] ....\n", (char *)FwModuleHdr[i]->ModuleName);
                 continue;
             }
 
