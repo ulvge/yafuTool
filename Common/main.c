@@ -682,7 +682,7 @@ int ResetFunction(IPMI20_SESSION_T *hSession)
     if (Parsing.ConfigPreserve == 1)
         WaitTime = 0x00;
 
-    printf("\rResetting the firmware..........\n");
+    printf("\r\nResetting the firmware..........\n");
     ResetDevice(hSession, WaitTime);
     return 0;
 }

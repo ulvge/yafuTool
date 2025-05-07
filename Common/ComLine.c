@@ -149,14 +149,14 @@ static int Parse_NonConfigurable_Arguments(int Argc, int *index, char *Arg, char
     else if (spstrcasecmp(Arg, "-auto") == 0)
     {
         printf(STR_ERR_INVALID_PARAMETERS);
-        printf(" %s\n", Arg);
+        printf(" %s\r\n", Arg);
         PrintHelp();
         return -1;
     }
     else if (Arg[0] == ':')
     {
         printf(STR_ERR_INVALID_PARAMETERS);
-        printf(" %s\n", Arg);
+        printf(" %s\r\n", Arg);
         PrintHelp();
         return -1;
     }
@@ -165,7 +165,7 @@ static int Parse_NonConfigurable_Arguments(int Argc, int *index, char *Arg, char
         if (strlen(Arg) > MAX_FILE_NAME_SIZE)
         {
             printf(STR_FILE_SIZE_INVALID);
-            printf("%s\n", Arg);
+            printf("%s\r\n", Arg);
             return -1;
         }
         Parsing.DoSPIImgUpdate = 1;
@@ -186,7 +186,7 @@ static int Parse_NonConfigurable_Arguments(int Argc, int *index, char *Arg, char
     else
     {
         printf(STR_ERR_INVALID_PARAMETERS);
-        printf(" %s\n", Arg);
+        printf(" %s\r\n", Arg);
         PrintHelp();
         return -1;
     }
@@ -216,19 +216,19 @@ static int Parse_Configurable_Arguments(int Argc, int *index, char *Arg, char *V
             }
             else
             {
-                printf("Network address string is too long.\n");
+                printf("Network address string is too long.\r\n");
                 exit(YAFU_NAME_LONG);
             }
         }
         else
         {
-            printf("Please supply the network address of the device.\n");
+            printf("Please supply the network address of the device.\r\n");
             exit(YAFU_INVALID_NAME);
         }
 
         if (!isIPvalid())
         {
-            printf("Please provide valid IP address after '-ip' option\n");
+            printf("Please provide valid IP address after '-ip' option\r\n");
             exit(YAFU_INVALID_IP);
         }
         return 0;
@@ -248,19 +248,19 @@ static int Parse_Configurable_Arguments(int Argc, int *index, char *Arg, char *V
             }
             else
             {
-                printf(" HostName length is too long.\n");
+                printf(" HostName length is too long.\r\n");
                 exit(YAFU_NAME_LONG);
             }
         }
         else
         {
-            printf("Please supply a HostName of the device.\n");
+            printf("Please supply a HostName of the device.\r\n");
             exit(YAFU_INVALID_NAME);
         }
         retval = getIPAddressbyhostname(hostname);
         if (retval != 0)
         {
-            printf("Please supply a valid hostname of the device.\n");
+            printf("Please supply a valid hostname of the device.\r\n");
             exit(YAFU_INVALID_NAME);
         }
         return 0;
@@ -272,7 +272,7 @@ static int Parse_Configurable_Arguments(int Argc, int *index, char *Arg, char *V
         if (strlen(Arg) > MAX_FILE_NAME_SIZE)
         {
             printf(STR_FILE_SIZE_INVALID);
-            printf("%s\n", Arg);
+            printf("%s\r\n", Arg);
             return -1;
         }
 
@@ -401,7 +401,7 @@ static int Parse_Configurable_Arguments(int Argc, int *index, char *Arg, char *V
 
         if ((Parsing.ImgSelect != IMAGE_1) && (Parsing.ImgSelect != IMAGE_2) && (Parsing.ImgSelect != IMAGE_BOTH) && (Parsing.ImgSelect != AUTO_INACTIVE_IMAGE))
         {
-            printf(" %s\n", Arg);
+            printf(" %s\r\n", Arg);
             printf(STR_ERR_OPTION_ARGUMENT);
             PrintHelp();
             return -1;
@@ -430,7 +430,7 @@ static int Parse_Configurable_Arguments(int Argc, int *index, char *Arg, char *V
         return 0;
 #else
         printf(STR_ERR_INVALID_PARAMETERS);
-        printf(" %s\n", Arg);
+        printf(" %s\r\n", Arg);
         PrintHelp();
         return -1;
 #endif
@@ -449,12 +449,12 @@ static int Parse_Configurable_Arguments(int Argc, int *index, char *Arg, char *V
         }
         else if (Value == NULL)
         {
-            printf("Invalid Signed Image Key filename \n");
+            printf("Invalid Signed Image Key filename \r\n");
             exit(YAFU_INVALID_NAME);
         }
         else
         {
-            printf("Signed Image Key filename string is too long \n");
+            printf("Signed Image Key filename string is too long \r\n");
             exit(YAFU_NAME_LONG);
         }
         return 0;
@@ -468,6 +468,16 @@ static int Parse_Configurable_Arguments(int Argc, int *index, char *Arg, char *V
     else if ((spstrcasecmp(Arg, "-preserve-config") == 0) || (spstrcasecmp(Arg, "-pc") == 0))
     {
         Parsing.ConfigPreserve = 0x01;
+        return 0;
+    }
+    else if ((spstrcasecmp(Arg, "-preserve-root") == 0) || (spstrcasecmp(Arg, "-pr") == 0))
+    {
+        Parsing.RootPreserve = 0x01;
+        return 0;
+    }
+    else if ((spstrcasecmp(Arg, "-preserve-www") == 0) || (spstrcasecmp(Arg, "-pw") == 0))
+    {
+        Parsing.WWWPreserve = 0x01;
         return 0;
     }
     else if ((spstrcasecmp(Arg, "-ignore-platform-check") == 0) || (spstrcasecmp(Arg, "-ipc") == 0))
@@ -547,7 +557,7 @@ static int Parse_Configurable_Arguments(int Argc, int *index, char *Arg, char *V
                 else
                 {
                     printf(STR_ERR_INVALID_PARAMETERS);
-                    printf(" Given Netfun %s is out of range of OEM Netfun.\n", Value);
+                    printf(" Given Netfun %s is out of range of OEM Netfun.\r\n", Value);
                     PrintHelp();
                     return -1;
                 }
@@ -555,7 +565,7 @@ static int Parse_Configurable_Arguments(int Argc, int *index, char *Arg, char *V
             else
             {
                 printf(STR_ERR_INVALID_PARAMETERS);
-                printf("Invalid NetFun.  %s\n", Value);
+                printf("Invalid NetFun.  %s\r\n", Value);
                 PrintHelp();
                 return -1;
             }
@@ -600,7 +610,7 @@ static int Parse_Configurable_Arguments(int Argc, int *index, char *Arg, char *V
         }
         else
         {
-            printf("Username field string is too long \n");
+            printf("Username field string is too long \r\n");
             exit(YAFU_NAME_LONG);
         }
         return 0;
@@ -616,7 +626,7 @@ static int Parse_Configurable_Arguments(int Argc, int *index, char *Arg, char *V
         }
         else
         {
-            printf("Password  field string is too long \n");
+            printf("Password  field string is too long \r\n");
             exit(YAFU_NAME_LONG);
         }
         return 0;
@@ -641,13 +651,13 @@ static int Parse_Configurable_Arguments(int Argc, int *index, char *Arg, char *V
             }
             else
             {
-                printf( "Serial terminal string is too long.\n" );
+                printf( "Serial terminal string is too long.\r\n" );
                 exit(YAFU_NAME_LONG);
             }
         }
         else
         {
-            printf( "Please supply the serial terminal of the device.\n" );
+            printf( "Please supply the serial terminal of the device.\r\n" );
             exit(YAFU_INVALID_NAME);
         }
         return 0;
@@ -740,7 +750,7 @@ static int Parse_Configurable_Arguments(int Argc, int *index, char *Arg, char *V
     }
     else if ((Arg[0] != '-') && (gParsingCliArgs == 0))
     {
-        printf("ERROR: Invalid Entry \"%s\" found in the Yafu INI Configuration... Ignoring this option...\n", Arg);
+        printf("ERROR: Invalid Entry \"%s\" found in the Yafu INI Configuration... Ignoring this option...\r\n", Arg);
         return 0;
     }
 
@@ -813,7 +823,7 @@ int CommandLineParsing(int argc, char *argv[])
         }
         if (conflit_count == 2)
         {
-            printf("Invalid Option: While Flashing Conf section, Whole Configuration can't be Preserved ...\n");
+            printf("Invalid Option: While Flashing Conf section, Whole Configuration can't be Preserved ...\r\n");
             return -1;
         }
     }
@@ -822,7 +832,7 @@ int CommandLineParsing(int argc, char *argv[])
     iniHandle = InitIniTable(IniFileName);
     if ((char *)iniHandle == NULL)
     {
-        printf("INFO: Yafu INI Configuration File not found... Default options will not be applied...\n");
+        printf("INFO: Yafu INI Configuration File not found... Default options will not be applied...\r\n");
         goto check_cmdline_args;
     }
 
@@ -830,7 +840,7 @@ int CommandLineParsing(int argc, char *argv[])
     EntryCount = GetIniEntryCount(iniHandle);
     if ((SecCount - 1) <= 0)
     {
-        printf("INFO: Yafu INI Configuration not seem to be Valid... Default options will not be applied...\n");
+        printf("INFO: Yafu INI Configuration not seem to be Valid... Default options will not be applied...\r\n");
         goto check_cmdline_args;
     }
 
@@ -841,7 +851,7 @@ int CommandLineParsing(int argc, char *argv[])
 
         if (spstrcasecmp(SectionName, STR_CONF_SEC_NAME) != 0)
         {
-            printf("INFO: Yafu INI Configuration seems to be corrupted... Default options will not be applied...\n");
+            printf("INFO: Yafu INI Configuration seems to be corrupted... Default options will not be applied...\r\n");
             goto check_cmdline_args;
         }
 
@@ -1061,7 +1071,7 @@ int getIPAddressbyhostname(char host[64])
     iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (iResult != 0)
     {
-        printf("WSAStrartup Failed %d\n", iResult);
+        printf("WSAStrartup Failed %d\r\n", iResult);
         return -1;
     }
 
@@ -1070,7 +1080,7 @@ int getIPAddressbyhostname(char host[64])
     err = getaddrinfo(host, NULL, NULL, &pRes);
     if (err != 0)
     {
-        printf("Error in getting addrinfo %s\n", gai_strerror(err));
+        printf("Error in getting addrinfo %s\r\n", gai_strerror(err));
         exit(YAFU_INVALID_NAME);
     }
     ptr = pRes;
@@ -1083,7 +1093,7 @@ int getIPAddressbyhostname(char host[64])
         iRetval = WSAAddressToString(sockaddr_ip, (DWORD)ptr->ai_addrlen, NULL, IPv6Addr, &ipbufferlength);
         if (iRetval != 0)
         {
-            printf("WSAAddressToString failed with %u\n", WSAGetLastError());
+            printf("WSAAddressToString failed with %u\r\n", WSAGetLastError());
             return -1;
         }
 #else

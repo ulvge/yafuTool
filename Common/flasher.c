@@ -100,11 +100,11 @@ int firsttime = 1;
  */
 int WarningMessage()
 {
-    printf("\n****************************************************************************\n");
-    printf(" WARNING!\n");
-    printf("        FIRMWARE UPGRADE MUST NOT BE INTERRUPTED ONCE IT IS STARTED.\n");
-    printf("        PLEASE DO NOT USE THIS FLASH TOOL FROM THE REDIRECTION CONSOLE.\n");
-    printf("****************************************************************************\n");
+    printf("\n****************************************************************************\r\n");
+    printf(" WARNING!\r\n");
+    printf("        FIRMWARE UPGRADE MUST NOT BE INTERRUPTED ONCE IT IS STARTED.\r\n");
+    printf("        PLEASE DO NOT USE THIS FLASH TOOL FROM THE REDIRECTION CONSOLE.\r\n");
+    printf("****************************************************************************\r\n");
     return 0;
 }
 
@@ -119,7 +119,7 @@ int MemoryDealloc(IPMI20_SESSION_T *hSession, INT32U Offset)
 {
     if (FreeMemory(hSession, Offset) != 0)
     {
-        printf("Error in Free Memory  %x\n", Offset);
+        printf("Error in Free Memory  %x\r\n", Offset);
         return -1;
     }
     return 0;
@@ -152,7 +152,7 @@ int FlashAndVerify(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsign
         if (SendMiscellaneousInfo(hSession, PreserveFlag, &AMIYAFUMiscellaneousRes) != 0)
         {
             if (vdbg)
-                printf("Error in SendMiscellaneousInfo \n");
+                printf("Error in SendMiscellaneousInfo \r\n");
             // return -1;
         }
     }
@@ -160,7 +160,7 @@ int FlashAndVerify(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsign
     if (EraseAndFlash(hSession, WriteMemOff, FlashOffset, Sizetocpy) != 0)
     {
         if (vdbg)
-            printf("Error in EraseAndFlashing \n");
+            printf("Error in EraseAndFlashing \r\n");
         return -1;
     }
     if (RecoveryFlashMode == 0x00)
@@ -179,20 +179,20 @@ int FlashAndVerify(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsign
         {
             if (ECFStatus(hSession) == -1)
             {
-                printf("Error in ECFStatus \n");
+                printf("Error in ECFStatus \r\n");
                 return -1;
             }
         }
         if (SilentFlash == 0x01 && Progressdis == 1 && Parsing.versioncmpflash != 1)
         {
-            printf("\rFlashing  Firmware Image ... Done\n");
+            printf("\rFlashing  Firmware Image ... Done\r\n");
             printf("Verifying  Firmware Image...");
             fflush(stdout);
         }
         if (VerifyFlash(hSession, WriteMemOff, FlashOffset, Sizetocpy) != 0)
         {
             if (vdbg)
-                printf("Error in Verify Flash \n");
+                printf("Error in Verify Flash \r\n");
             return -1;
         }
 
@@ -200,13 +200,13 @@ int FlashAndVerify(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsign
         {
             if (VerifyStatus(hSession) == -1)
             {
-                printf("Error in Verify VerifyStatus \n");
+                printf("Error in Verify VerifyStatus \r\n");
                 return -1;
             }
         }
         if (Parsing.Silent == 0x01 && Progressdis == 1)
         {
-            printf("\rVerifying  Firmware Image ... Done\n");
+            printf("\rVerifying  Firmware Image ... Done\r\n");
         }
     }
     return 0;
@@ -253,7 +253,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
         {
             if (MemoryAllocation(hSession, SizetoAlloc) != 0 || AddofAllocMem == 0xffffffff)
             {
-                fprintf(stderr, "Error in Memory Allocation  %x\n", (unsigned int)(SizetoAlloc));
+                fprintf(stderr, "Error in Memory Allocation  %x\r\n", (unsigned int)(SizetoAlloc));
                 return -1;
             }
             if (AddofAllocMem == 0xfffffffe)
@@ -300,13 +300,13 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
             Buf = bufArr;
             memset(Buf, 0, SizeToRead);
             if (fseek(img, seekpos, SEEK_SET) != 0)
-                printf("Error in fseek\n");
+                printf("Error in fseek\r\n");
             if (fread(Buf, 1, SizeToRead, img) != SizeToRead) {
-                printf("Error in fread ...\n");
+                printf("Error in fread ...\r\n");
             }
             else {
                 static int debugBIN = 0;
-                //printf("fread data from img is success, SizeToRead = %#x, Offset = %#x\n", SizeToRead, Offset);
+                //printf("fread data from img is success, SizeToRead = %#x, Offset = %#x\r\n", SizeToRead, Offset);
                 if (debugBIN){
                     for (int d = 0; d < SizeToRead; d++) {
                         if (d % 16 == 0) {
@@ -328,7 +328,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
                 WriteMemOff = Offset;
             }
 
-            //printf("WritetoMemory  , FlashFirmware, line = %d\n", __LINE__);
+            //printf("WritetoMemory  , FlashFirmware, line = %d\r\n", __LINE__);
             if (WritetoMemory(hSession, WriteMemOff, Datalen, Buf) != 0)
             {
                 if (RecoveryFlashMode == 0x00){
@@ -371,7 +371,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
     if (Parsing.Full == 0x01)
     {
         if (Parsing.Silent == 0x00)
-            printf("flasher Uploading Firmware Image : %d%%... done\n", (int)(Percentage));
+            printf("flasher Uploading Firmware Image : %d%%... done\n\r\n", (int)(Percentage));
         else
             printf("\rUploading Firmware Image ...  Done");
 
@@ -418,7 +418,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
             /* If preserve flag is enabled and module is not duplicated ( count of individual section is not greater than 1 ) then preserve that module*/
             if ((spstrcasecmp((char *)FwModuleHdr[i]->ModuleName, "boot") == 0) && BootPreserve == 1)
             {
-                printf("Skipping boot Module [%s] ....\n", (char *)FwModuleHdr[i]->ModuleName);
+                printf("Skipping boot Module [%s] ....\r\n", (char *)FwModuleHdr[i]->ModuleName);
                 if ((ImgOpt == -1) && (Parsing.ConfigPreserve == 1))
                 {
                     for (Count = 0; Count < ModuleCount; Count++)
@@ -450,17 +450,27 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
             }
             else if ((spstrcasecmp(FwModuleName, "boot_img") == 0) && BootPreserve == 1)
             {
-                printf("Skipping boot_img Module [%s] ....\n", (char *)FwModuleHdr[i]->ModuleName);
+                printf("Skipping boot_img Module [%s] ....\r\n", (char *)FwModuleHdr[i]->ModuleName);
                 continue;
             }
             else if ((spstrcasecmp((char *)FwModuleHdr[i]->ModuleName, "conf") == 0) && (ConfigPreserve == 1) && (ImgOpt != -1))
             {
-                printf("Skipping conf Module [%s] ....\n", (char *)FwModuleHdr[i]->ModuleName);
+                printf("Skipping conf Module [%s] ....\r\n", (char *)FwModuleHdr[i]->ModuleName);
                 continue;
             }
             else if ((spstrcasecmp((char *)FwModuleHdr[i]->ModuleName, "extlog") == 0) && ExtlogPreserve == 1)
             {
-                printf("Skipping extlog Module [%s] ....\n", (char *)FwModuleHdr[i]->ModuleName);
+                printf("Skipping extlog Module [%s] ....\r\n", (char *)FwModuleHdr[i]->ModuleName);
+                continue;
+            }
+            else if ((spstrcasecmp((char *)FwModuleHdr[i]->ModuleName, "root") == 0) && Parsing.RootPreserve == 1)
+            {
+                printf("Skipping root Module [%s] ....\r\n", (char *)FwModuleHdr[i]->ModuleName);
+                continue;
+            }
+            else if ((spstrcasecmp((char *)FwModuleHdr[i]->ModuleName, "www") == 0) && Parsing.WWWPreserve == 1)
+            {
+                printf("Skipping www Module [%s] ....\r\n", (char *)FwModuleHdr[i]->ModuleName);
                 continue;
             }
 
@@ -556,19 +566,19 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
             else if ((spstrcasecmp((char *)FwModuleHdr[i]->ModuleName, "extlog") == 0) && Extlog > 1)
                 spsnprintf(ModName, strlen((char *)FwModuleHdr[i]->ModuleName) + MAX_BKUP_LEN, "bkup%s", (char *)FwModuleHdr[i]->ModuleName);
 
-            printf("Flashing [%s] Module ....\n", ModName);
+            printf("\r\nFlashing Module [%s]....\r\n", ModName);
             if (!RecoveryFlashMode)
             {
                 if (SendMiscellaneousInfo(hSession, PreserveFlag, &AMIYAFUMiscellaneousRes) != 0)
                 {
                     if (vdbg)
-                        printf("Error in SendMiscellaneousInfo \n");
+                        printf("Error in SendMiscellaneousInfo \r\n");
                     // return -1;
                 }
             }
             if (EraseAndFlash(hSession, MemOffsetLoc, FlashOffset, SizetoCpy) != 0)
             {
-                printf("Error in EraseAndFlashing \n");
+                printf("Error in EraseAndFlashing \r\n");
                 return -1;
             }
 
@@ -589,14 +599,14 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
 
                 if (VerifyFlash(hSession, MemOffsetLoc, FlashOffset, SizetoCpy) != 0)
                 {
-                    printf("Error in Verify Flash \n");
+                    printf("Error in Verify Flash \r\n");
                     return -1;
                 }
                 if (oldVersion != 0x01)
                 {
                     if (VerifyStatus(hSession) == -1)
                     {
-                        printf("Error in Verify \n");
+                        printf("Error in Verify \r\n");
                         return -1;
                     }
                 }
@@ -607,7 +617,7 @@ int FlashFirmware(IPMI20_SESSION_T *hSession, FILE *img, INT32U SizeToFlash, INT
     {
         if ((BIOS_FLASH == SPIDevice) || (CPLD_FLASH == SPIDevice))
         {
-            printf("Uploading Image : %d%%... done\n", Percentage);
+            printf("Uploading Image : %d%%... done\r\n", Percentage);
         }
 
         if (FlashAndVerify(hSession, WriteMemOff, FlashOffset, SizetoCpy, PreserveFlag) != 0)
@@ -720,7 +730,7 @@ int VersionCmpFlash(int *ModNo, int *Modcnt)
                 {
                     if ((FwModuleHdr[i]->FmhLocation != CurrFwModInfo[j]->FmhLocation) || (FwModuleHdr[i]->AllocatedSize != CurrFwModInfo[j]->AllocatedSize))
                     {
-                        printf("proceeding for full firmware upgrade as module sizes are different\n");
+                        printf("proceeding for full firmware upgrade as module sizes are different\r\n");
                         FullFirmwareup = 1;
                         break;
                     }
@@ -759,7 +769,7 @@ int VersionCmpFlash(int *ModNo, int *Modcnt)
             }
             if (j == ModCount)
             {
-                printf("Unable to locate the module name \n\n");
+                printf("Unable to locate the module name \n\r\n");
                 FullFirmwareup = 1;
             }
 
@@ -808,7 +818,7 @@ int FullFlashThreadFn(IPMI20_SESSION_T *hSession, FILE *img, int Config, int Boo
 
     if (GetStatus(hSession) != 0)
     {
-        printf("Error in GetStatus \n");
+        printf("Error in GetStatus \r\n");
         return -1;
     }
 
@@ -821,7 +831,7 @@ int FullFlashThreadFn(IPMI20_SESSION_T *hSession, FILE *img, int Config, int Boo
         Protect = 0x00;
         if (protectFlash(hSession, Blknum, Protect) != 0)
         {
-            printf("Error in Protect Flash \n");
+            printf("Error in Protect Flash \r\n");
             return -1;
         }
     }
@@ -829,7 +839,7 @@ int FullFlashThreadFn(IPMI20_SESSION_T *hSession, FILE *img, int Config, int Boo
     {
         if (1 == Parsing.SplitImg)
         {
-            printf("Upgrading Firmware by comparing Module version..\n");
+            printf("Upgrading Firmware by comparing Module version..\r\n");
             for (i = 0; i < Modver; i++)
             {
 
@@ -843,16 +853,16 @@ int FullFlashThreadFn(IPMI20_SESSION_T *hSession, FILE *img, int Config, int Boo
                 fflush(stdout);
                 if (FlashModule(hSession, img, SizetoCopy, CurrFMHLoc, FMHLocation, FwModuleHdr[ModNo[i]]->ModuleName) != 0)
                 {
-                    printf("Upgrading module %s...                Failed\n", FwModuleHdr[ModNo[i]]->ModuleName);
+                    printf("Upgrading module %s...                Failed\r\n", FwModuleHdr[ModNo[i]]->ModuleName);
                     fclose(img);
                     return -1;
                 }
-                printf("Upgrading module %s...                done\n", FwModuleHdr[ModNo[i]]->ModuleName);
+                printf("Upgrading module %s...                done\r\n", FwModuleHdr[ModNo[i]]->ModuleName);
             }
         }
         else
         {
-            printf("Upgrading Firmware by comparing Module version..\n");
+            printf("Upgrading Firmware by comparing Module version..\r\n");
             for (i = 0; i < Modver; i++)
             {
                 SilentFlash = 0x01;
@@ -867,10 +877,10 @@ int FullFlashThreadFn(IPMI20_SESSION_T *hSession, FILE *img, int Config, int Boo
                 printf("Upgrading module %s...                \r", FwModuleHdr[ModNo[i]]->ModuleName);
                 fflush(stdout);
                 if (0 == ModuleUpgrade(hSession, img, ModNo[i], 1, iter, Modver))
-                    printf("Upgrading module %s...              done\n", FwModuleHdr[ModNo[i]]->ModuleName);
+                    printf("Upgrading module %s...              done\r\n", FwModuleHdr[ModNo[i]]->ModuleName);
                 else
                 {
-                    printf("Upgrading module %s...                Failed\n", FwModuleHdr[ModNo[i]]->ModuleName);
+                    printf("Upgrading module %s...                Failed\r\n", FwModuleHdr[ModNo[i]]->ModuleName);
                     return -1;
                 }
                 iter = i;
@@ -899,7 +909,7 @@ int FullFlashThreadFn(IPMI20_SESSION_T *hSession, FILE *img, int Config, int Boo
         {
             if (Parsing.Silent == 0x01)
             {
-                printf("Upgrading Firmware Image...\n");
+                printf("Upgrading Firmware Image...\r\n");
                 fflush(stdout);
             }
 
@@ -1039,24 +1049,24 @@ int FullFlashThreadFn(IPMI20_SESSION_T *hSession, FILE *img, int Config, int Boo
                 {
                     if (vdbg)
                     {
-                        printf("\nSaving Env variables\n");
+                        printf("\nSaving Env variables\r\n");
                         fflush(stdout);
                     }
 
                     EnvWritten = 1;
                     if (ImgOpt == -1)
                     {
-                        printf("Block by Block Mode setting Environment Variables\n");
+                        printf("Block by Block Mode setting Environment Variables\r\n");
                         if (SetBlkUBootVars(hSession, &env, EraseBlkSize) != 0)
                         {
-                            printf("Error in SettingEnvUbootVariables \n");
+                            printf("Error in SettingEnvUbootVariables \r\n");
                         }
                     }
                     else
                     {
                         if (SettingEnvUbootVariables(hSession, bvnArr, &BootVarsCount) != 0)
                         {
-                            printf("Error in SettingEnvUbootVariables \n");
+                            printf("Error in SettingEnvUbootVariables \r\n");
                         }
                     }
                 }
@@ -1089,11 +1099,11 @@ int FullFlashThreadFn(IPMI20_SESSION_T *hSession, FILE *img, int Config, int Boo
             }
             if (Parsing.Silent == 0x01)
             {
-                printf("\rUpgrading Firmware Image ...    Done\n");
+                printf("\rUpgrading Firmware Image ...    Done\r\n");
             }
             else
             {
-                printf("\rUpgrading Firmware Image : %d%%... done\n", Percentage);
+                printf("\rUpgrading Firmware Image : %d%%... done\r\n", Percentage);
             }
         }
     }
@@ -1177,7 +1187,7 @@ int ModuleUpgrade(IPMI20_SESSION_T *hSession, FILE *img, int Module, int FlashFl
     Protect = 0x00;
     if (protectFlash(hSession, Blknum, Protect) != 0)
     {
-        printf("Error in Protecting Flash \n");
+        printf("Error in Protecting Flash \r\n");
         return -1;
     }
 
@@ -1214,12 +1224,12 @@ int ModuleUpgrade(IPMI20_SESSION_T *hSession, FILE *img, int Module, int FlashFl
             {
                 if (MemoryAllocation(hSession, SizetoAlloc) != 0 || AddofAllocMem == 0xffffffff)
                 {
-                    fprintf(stderr, "Error in Memory Allocation %x\n", (unsigned int)(SizetoAlloc));
+                    fprintf(stderr, "Error in Memory Allocation %x\r\n", (unsigned int)(SizetoAlloc));
                     return -1;
                 }
                 if (AddofAllocMem == 0xfffffffe)
                 {
-                    printf("There is no Sufficient Memory So,Block by Block Mode is not Supported for signed image\n");
+                    printf("There is no Sufficient Memory So,Block by Block Mode is not Supported for signed image\r\n");
                     return -1;
                 }
                 MemOffset = AddofAllocMem;
@@ -1238,14 +1248,14 @@ int ModuleUpgrade(IPMI20_SESSION_T *hSession, FILE *img, int Module, int FlashFl
                 Buf = bufArr;
                 if (fseek(img, Offset, SEEK_SET) != 0)
                 {
-                    printf("\nError in fseek \n");
+                    printf("\nError in fseek \r\n");
                 }
                 if (fread(Buf, 1, SizeToRead, img) != SizeToRead)
                 {
-                    printf("\nError in fread \n");
+                    printf("\nError in fread \r\n");
                 }
 
-                printf("WritetoMemory  , ModuleUpgrade, line = %d\n", __LINE__);
+                printf("WritetoMemory  , ModuleUpgrade, line = %d\r\n", __LINE__);
                 if (WritetoMemory(hSession, AddofAllocMem + Offset, SizeToRead, Buf) != 0)
                 {
                     if (RecoveryFlashMode == 0x00)
@@ -1287,7 +1297,7 @@ int ModuleUpgrade(IPMI20_SESSION_T *hSession, FILE *img, int Module, int FlashFl
                 {
                     if (VerifyStatus(hSession) == -1)
                     {
-                        printf("Error in Verify Firmware\n");
+                        printf("Error in Verify Firmware\r\n");
                         MemoryDealloc(hSession, AddofAllocMem);
                         return -1;
                     }
@@ -1316,7 +1326,7 @@ int ModuleUpgrade(IPMI20_SESSION_T *hSession, FILE *img, int Module, int FlashFl
             {
                 if (MemoryAllocation(hSession, SizetoAlloc) != 0)
                 {
-                    printf("Error in Memory Allocation \n");
+                    printf("Error in Memory Allocation \r\n");
                     return -1;
                 }
                 VMemOffset = MemAlloc = AddofAllocMem;
@@ -1333,9 +1343,9 @@ int ModuleUpgrade(IPMI20_SESSION_T *hSession, FILE *img, int Module, int FlashFl
                 Buf = bufArr;
                 memset(Buf, 0, SizeToRead);
                 if (fseek(img, ImagePos, SEEK_SET) != 0)
-                    printf("\nError in fseek \n");
+                    printf("\nError in fseek \r\n");
                 if (fread(Buf, 1, SizeToRead, img) != SizeToRead)
-                    printf("\nError in fread \n");
+                    printf("\nError in fread \r\n");
 
                 WriteMemOff = VMemOffset;
                 Datalen = (INT16U)SizeToRead;
@@ -1344,7 +1354,7 @@ int ModuleUpgrade(IPMI20_SESSION_T *hSession, FILE *img, int Module, int FlashFl
                 {
                     WriteMemOff = Offset;
                 }
-                //printf("WritetoMemory  , ModuleUpgrade, line = %d\n", __LINE__);
+                //printf("WritetoMemory  , ModuleUpgrade, line = %d\r\n", __LINE__);
                 if (WritetoMemory(hSession, WriteMemOff, Datalen, Buf) != 0)
                 {
                     if (RecoveryFlashMode == 0x00)
@@ -1485,7 +1495,7 @@ int FlashModule(IPMI20_SESSION_T *hSession, FILE *img, unsigned long SizetoCopy,
     Protect = 0x00;
     if (protectFlash(hSession, Blknum, Protect) != 0)
     {
-        printf("Error in Protecting Flash \n");
+        printf("Error in Protecting Flash \r\n");
         return -1;
     }
 
@@ -1535,7 +1545,7 @@ int FlashModule(IPMI20_SESSION_T *hSession, FILE *img, unsigned long SizetoCopy,
         {
             if (MemoryAllocation(hSession, SizetoAlloc) != 0)
             {
-                printf("Error in Memory Allocation \n");
+                printf("Error in Memory Allocation \r\n");
                 return -1;
             }
             VMemOffset = MemAlloc = AddofAllocMem;
@@ -1552,9 +1562,9 @@ int FlashModule(IPMI20_SESSION_T *hSession, FILE *img, unsigned long SizetoCopy,
             Buf = bufArr;
             memset(Buf, 0, SizeToRead);
             if (fseek(img, ImagePos, SEEK_SET) != 0)
-                printf("\nError in fseek \n");
+                printf("\nError in fseek \r\n");
             if (fread(Buf, 1, SizeToRead, img) != SizeToRead)
-                printf("\nError in fread \n");
+                printf("\nError in fread \r\n");
 
             WriteMemOff = VMemOffset;
             Datalen = (INT16U)SizeToRead;
@@ -1563,7 +1573,7 @@ int FlashModule(IPMI20_SESSION_T *hSession, FILE *img, unsigned long SizetoCopy,
             {
                 WriteMemOff = Offset;
             }
-            printf("WritetoMemory  , FlashModule, line = %d\n", __LINE__);
+            printf("WritetoMemory  , FlashModule, line = %d\r\n", __LINE__);
             if (WritetoMemory(hSession, WriteMemOff, Datalen, Buf) != 0)
             {
                 if (RecoveryFlashMode == 0x00)

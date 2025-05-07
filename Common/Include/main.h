@@ -227,6 +227,8 @@ typedef struct
      int FlashModCnt;
      int FlashModImg;
      int ExtlogPreserve;
+     int RootPreserve; // 0x01: Skipping; else update flash
+     int WWWPreserve; // 0x01: Skipping; else update flash
      int versioncmpflash;
      unsigned char ActivateNode;
      int DoMMCImgUpdate; /*rom.ima*/
@@ -353,6 +355,8 @@ OPTION : \n \
                                               If platform supports Dual Image, this option skips user\n \
                                               interaction, preserves config and continues update process.\n \
                                               This option is not allowed with interactive upgrade option.\n \
+-pr,-preserve-root                            Option to preserve root Module during full upgrade.\n \
+-pw,-preserve-www                             Option to preserve www Module during full upgrade.\n \
 -ipc,-ignore-platform-check                   If this image is for a different platform, this option skips\n \
                                               user interaction and continues update process.\n \
 -idi,-ignore-diff-image                       If this image differs from the one currently programmed, this\n \

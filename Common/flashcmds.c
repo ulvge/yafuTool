@@ -393,21 +393,21 @@ int ActivateFlashMode(IPMI20_SESSION_T *hSession)
         errVal = IPMICMD_AMIYAFUActivateFlashMode(hSession, pAMIYAFUActivateFlashReq, &pAMIYAFUActivateFlashRes, RECIEVE_TIME_OUT);
         if (pAMIYAFUActivateFlashRes.CompletionCode == YAFU_CC_DEV_IN_FIRMWARE_UPDATE_MODE)
         {
-            printf("Warning: Device is already in Firmware Update Mode.\n");
+            printf("Warning: Device is already in Firmware Update Mode.\r\n");
             
             /*pAMIYAFUActivateFlashReq->ActivateflashReq.YafuCmd = CMD_AMI_YAFU_DEACTIVATE_FLASH_MODE;
             pAMIYAFUActivateFlashReq->ActivateflashReq.CRC32chksum = CalculateChksum((char*)&pAMIYAFUActivateFlashReq->Mode, sizeof(INT16U));
             errVal = IPMICMD_AMIYAFUDeactivateFlash(hSession, pAMIYAFUActivateFlashReq, &pAMIYAFUActivateFlashRes, 3000);
             errVal = LIBIPMI_HL_AMIDeactivateFlashMode(hSession, 3000);*/
             errVal = DeactivateFlshMode(hSession);
-            printf("Warning: Device exist Firmware Update Mode, errVal2 = %d\n", errVal);
+            printf("Warning: Device exist Firmware Update Mode, errVal2 = %d\r\n", errVal);
             exit(YAFU_CC_DEV_IN_FIRMWARE_UPDATE_MODE);
         }
         if (errVal != 0)
         {
             if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
             {
-                printf("Exiting as IPMI Session timed out due to inactivity\n");
+                printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                 exit(YAFU_COMMAND_TIMEOUT_ERR);
             }
             return -1;
@@ -431,7 +431,7 @@ int ActivateFlashMode(IPMI20_SESSION_T *hSession)
                 retVal = SendTimedImbpRequest(&IfcReqHdr, 6000, ResBuf, &ResLen, &CompCode);
                 if (CompCode == YAFU_CC_DEV_IN_FIRMWARE_UPDATE_MODE)
                 {
-                    printf("Warning: Device is already in Firmware Update Mode..\n");
+                    printf("Warning: Device is already in Firmware Update Mode..\r\n");
                     exit(YAFU_CC_DEV_IN_FIRMWARE_UPDATE_MODE);
                 }
 
@@ -489,7 +489,7 @@ int GetDualImageSupport(IPMI20_SESSION_T *hSession, int Parameter, int *DualImag
             {
                 if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
                 {
-                    printf("Exiting as IPMI Session timed out due to inactivity\n");
+                    printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                     exit(YAFU_COMMAND_TIMEOUT_ERR);
                 }
                 return errVal;
@@ -539,7 +539,7 @@ int GetDualImageSupport(IPMI20_SESSION_T *hSession, int Parameter, int *DualImag
             {
                 if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
                 {
-                    printf("Exiting as IPMI Session timed out due to inactivity\n");
+                    printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                     exit(YAFU_COMMAND_TIMEOUT_ERR);
                 }
                 return errVal;
@@ -618,7 +618,7 @@ int SetDualImageConfig(IPMI20_SESSION_T *hSession, int Parameter, int DualImageR
             {
                 if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
                 {
-                    printf("Exiting as IPMI Session timed out due to inactivity\n");
+                    printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                     exit(YAFU_COMMAND_TIMEOUT_ERR);
                 }
                 return errVal;
@@ -683,7 +683,7 @@ int DualImageSettings(IPMI20_SESSION_T *hSession, int preserveconf)
         {
             if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
             {
-                printf("Exiting as IPMI Session timed out due to inactivity\n");
+                printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                 exit(YAFU_COMMAND_TIMEOUT_ERR);
             }
             return errVal;
@@ -775,7 +775,7 @@ int MemoryAllocation(IPMI20_SESSION_T *hSession, unsigned long SizeToAlloc)
             {
                 if (vdbg)
                 {
-                    printf("\nWarning: YAFUAllocateMemory failed %d \n", errVal);
+                    printf("\nWarning: YAFUAllocateMemory failed %d \r\n", errVal);
                     fflush(stdout);
                 }
                 RetryCount += 1;
@@ -783,7 +783,7 @@ int MemoryAllocation(IPMI20_SESSION_T *hSession, unsigned long SizeToAlloc)
                 {
                     if (vdbg)
                     {
-                        printf("Retry #%d\n", RetryCount);
+                        printf("Retry #%d\r\n", RetryCount);
                         fflush(stdout);
                     }
                     continue;
@@ -792,7 +792,7 @@ int MemoryAllocation(IPMI20_SESSION_T *hSession, unsigned long SizeToAlloc)
                 {
                     if (vdbg)
                     {
-                        printf("Error: Retry Count exceeded. So trying with block by block mode\n");
+                        printf("Error: Retry Count exceeded. So trying with block by block mode\r\n");
                         fflush(stdout);
                     }
                     AddofAllocMem = 0xfffffffe;
@@ -842,14 +842,14 @@ int ReplaceSignedImageKey(IPMI20_SESSION_T *hSession, char *FileName, int timeou
     fp = fopen(FileName, "r");
     if (fp == NULL)
     {
-        printf("Error Opening Public Key File: %s\n", FileName);
+        printf("Error Opening Public Key File: %s\r\n", FileName);
         return -1;
     }
 
     Size = fread(&Buf[0], 1, sizeof(Buf), fp);
     if (Size <= 0)
     {
-        printf("Public Key might be Corrupted or No Data!!!!! Please upload a different Key\n");
+        printf("Public Key might be Corrupted or No Data!!!!! Please upload a different Key\r\n");
         fclose(fp);
         return -1;
     }
@@ -954,26 +954,26 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
             SET_ERR_CODE(ERR_BMC_COMM);
             if (vdbg)
             {
-                printf("\nWarning: WritetoMemory failed %d \n", errVal);
+                printf("\nWarning: WritetoMemory failed %d \r\n", errVal);
                 fflush(stdout);
             }
             RetryCount += 1;
 
             if (RetryCount == 1)
             {
-                printf("\nWarning: WritetoMemory failed RetryCount at 1,errVal = %d, will try again \n", errVal);
+                printf("\nWarning: WritetoMemory failed RetryCount at 1,errVal = %d, will try again \r\n", errVal);
             } else if (RetryCount <= RETRYCOUNT)
             {
                 if (vdbg)
                 {
-                    printf("Retry #%d\n", RetryCount);
+                    printf("Retry #%d\r\n", RetryCount);
                     fflush(stdout);
                 }
                 continue;
             }
             else
             {
-                printf("Error: Retry Count exceeded. Aborting, line = %d, errVal = %d\n", __LINE__, errVal);
+                printf("Error: Retry Count exceeded. Aborting, line = %d, errVal = %d\r\n", __LINE__, errVal);
                 fflush(stdout);
                 return -1;
             }
@@ -986,7 +986,7 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
         {
             if (vdbg)
             {
-                printf("\nWarning: WritetoMemory - AMI_YAFU_COMMON_NAK\n");
+                printf("\nWarning: WritetoMemory - AMI_YAFU_COMMON_NAK\r\n");
                 fflush(stdout);
             }
             RetryCount_NAK += 1;
@@ -994,7 +994,7 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
             {
                 if (vdbg)
                 {
-                    printf("Retry #%d\n", RetryCount_NAK);
+                    printf("Retry #%d\r\n", RetryCount_NAK);
                     fflush(stdout);
                 }
                 continue;
@@ -1003,7 +1003,7 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\r\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -1018,7 +1018,7 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
         {
             if (vdbg)
             {
-                printf("\nWarning: WritetoMemory - Checksum error\n");
+                printf("\nWarning: WritetoMemory - Checksum error\r\n");
                 fflush(stdout);
             }
             RetryCount_CSUM += 1;
@@ -1026,7 +1026,7 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
             {
                 if (vdbg)
                 {
-                    printf("Retry #%d\n", RetryCount_CSUM);
+                    printf("Retry #%d\r\n", RetryCount_CSUM);
                     fflush(stdout);
                 }
                 continue;
@@ -1035,7 +1035,7 @@ int WritetoMemory(IPMI20_SESSION_T *hSession, unsigned long AddofAlloc, INT16U D
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\r\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -1104,12 +1104,12 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
             {
                 if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
                 {
-                    printf("Exiting as IPMI Session timed out due to inactivity\n");
+                    printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                     exit(YAFU_COMMAND_TIMEOUT_ERR);
                 }
                 if (vdbg)
                 {
-                    printf("\nWarning: YAFUEraseCopyFlash failed %d \n", errVal);
+                    printf("\nWarning: YAFUEraseCopyFlash failed %d \r\n", errVal);
                     fflush(stdout);
                 }
                 RetryCount_EC += 1;
@@ -1117,7 +1117,7 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
                 {
                     if (vdbg)
                     {
-                        printf("Retry #%d\n", RetryCount_EC);
+                        printf("Retry #%d\r\n", RetryCount_EC);
                         fflush(stdout);
                     }
                     continue;
@@ -1126,7 +1126,7 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
                 {
                     if (vdbg)
                     {
-                        printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
+                        printf("Error: Retry Count exceeded. Aborting, line = %d\r\n", __LINE__);
                         fflush(stdout);
                     }
                     return -1;
@@ -1148,7 +1148,7 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
                 SET_ERR_CODE(ERR_BMC_COMM);
                 if (vdbg)
                 {
-                    printf("\nWarning: EraseAndFlash failed %d \n", errVal);
+                    printf("\nWarning: EraseAndFlash failed %d \r\n", errVal);
                     fflush(stdout);
                 }
                 RetryCount_IPMB_REQ += 1;
@@ -1156,7 +1156,7 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
                 {
                     if (vdbg)
                     {
-                        printf("Retry #%d\n", RetryCount_IPMB_REQ);
+                        printf("Retry #%d\r\n", RetryCount_IPMB_REQ);
                         fflush(stdout);
                     }
                     continue;
@@ -1165,7 +1165,7 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
                 {
                     if (vdbg)
                     {
-                        printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
+                        printf("Error: Retry Count exceeded. Aborting, line = %d\r\n", __LINE__);
                         fflush(stdout);
                     }
                     return -1;
@@ -1187,18 +1187,18 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
                 ErrorCode = pAMIYAFUEraseCopyFlashRes.Sizecopied & 0x0000FFFF;
                 if (ErrorCode == YAFU_CC_INVALID_SIGN_IMAGE)
                 {
-                    printf("The Uploaded Signed Image or Public key might be wrong !!! Kindly Upload valid Image or Public Key\n");
+                    printf("The Uploaded Signed Image or Public key might be wrong !!! Kindly Upload valid Image or Public Key\r\n");
                     return -2;
                 }
                 else if (ErrorCode == YAFU_CC_SIGNED_SUPP_NOT_ENABLED)
                 {
-                    printf("Signed Image Support is not enabled in Existing Flash !!!\n");
+                    printf("Signed Image Support is not enabled in Existing Flash !!!\r\n");
                     return -2;
                 }
             }
             if (vdbg)
             {
-                printf("\nWarning: EraseAndFlash - AMI_YAFU_COMMON_NAK\n");
+                printf("\nWarning: EraseAndFlash - AMI_YAFU_COMMON_NAK\r\n");
                 fflush(stdout);
             }
             RetryCount_NAK += 1;
@@ -1206,7 +1206,7 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
             {
                 if (vdbg)
                 {
-                    printf("Retry #%d\n", RetryCount_NAK);
+                    printf("Retry #%d\r\n", RetryCount_NAK);
                     fflush(stdout);
                 }
                 continue;
@@ -1215,7 +1215,7 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\r\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -1230,7 +1230,7 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
         {
             if (vdbg)
             {
-                printf("\nWarning: EraseAndFlash - Checksum error\n");
+                printf("\nWarning: EraseAndFlash - Checksum error\r\n");
                 fflush(stdout);
             }
             RetryCount_CSUM += 1;
@@ -1238,7 +1238,7 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
             {
                 if (vdbg)
                 {
-                    printf("Retry #%d\n", RetryCount_CSUM);
+                    printf("Retry #%d\r\n", RetryCount_CSUM);
                     fflush(stdout);
                 }
                 continue;
@@ -1247,7 +1247,7 @@ int EraseAndFlash(IPMI20_SESSION_T *hSession, unsigned long WriteMemOff, unsigne
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\r\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -1330,7 +1330,7 @@ int ECFStatus(IPMI20_SESSION_T *hSession)
 
             if (pAMIYAFUGetECFStatusRes.Status == YAFU_CC_FLASH_SAME_IMAGE)
             {
-                printf("\rCurrent Image and Existing Image are Same ... Not Proceeding Flashing Operation ...\n");
+                printf("\rCurrent Image and Existing Image are Same ... Not Proceeding Flashing Operation ...\r\n");
                 return 2;
             }
 
@@ -1339,7 +1339,7 @@ int ECFStatus(IPMI20_SESSION_T *hSession)
                 if ((pAMIYAFUGetECFStatusRes.Status >= 0x02 && pAMIYAFUGetECFStatusRes.Status <= 0x06) || pAMIYAFUGetECFStatusRes.Status == 0x11)
                 {
                     if (vdbg)
-                        printf("Error in Flashing Firmware Image %x\n", pAMIYAFUGetECFStatusRes.Status);
+                        printf("Error in Flashing Firmware Image %x\r\n", pAMIYAFUGetECFStatusRes.Status);
                     return -1;
                 }
                 else
@@ -1351,12 +1351,12 @@ int ECFStatus(IPMI20_SESSION_T *hSession)
             {
                 if (ActualConfig == 1)
                 {
-                    printf("\rFlashing  Firmware Image ECFProgress 0: %d%%", (int)(ECFPercent + ((((pAMIYAFUGetECFStatusRes.Progress * ActualSizetoCopy) / 100) * 100) / ActualCopySize)));
+                    printf("\r\tFlashing  Firmware Image ECFProgress 0: %d%%", (int)(ECFPercent + ((((pAMIYAFUGetECFStatusRes.Progress * ActualSizetoCopy) / 100) * 100) / ActualCopySize)));
                     if (pAMIYAFUGetECFStatusRes.Status == YAFU_ECF_SUCCESS)
                     {
                         if (ECFPercent > 0)
                         {
-                            printf("\rFlashing  Firmware Image ECFProgress 1: %d%%... done\n", (int)(ECFPercent + ((((pAMIYAFUGetECFStatusRes.Progress * ActualSizetoCopy) / 100) * 100) / ActualCopySize)));
+                            printf("\r\tFlashing  Firmware Image ECFProgress 1: %d%%... done\n", (int)(ECFPercent + ((((pAMIYAFUGetECFStatusRes.Progress * ActualSizetoCopy) / 100) * 100) / ActualCopySize)));
                         }
                         ECFPercent = (INT16U)((((pAMIYAFUGetECFStatusRes.Progress * ActualSizetoCopy) / 100) * 100) / ActualCopySize) + 1;
                         break;
@@ -1383,15 +1383,15 @@ int ECFStatus(IPMI20_SESSION_T *hSession)
                             cpld_flash_status = 0;
                     }
                     else
-                        printf("\rFlashing  Firmware Image ECFProgress 2: %d%%", pAMIYAFUGetECFStatusRes.Progress);
+                        printf("\r\tFlashing  Firmware Image ECFProgress 2: %d%%", pAMIYAFUGetECFStatusRes.Progress);
 
                     if (pAMIYAFUGetECFStatusRes.Progress >= 100)
                     {
-                        printf("\rFlashing  Firmware Image ECFProgress 3: %d%%... done", pAMIYAFUGetECFStatusRes.Progress);
+                        printf("\r\tFlashing  Firmware Image ECFProgress 3: %d%%... done", pAMIYAFUGetECFStatusRes.Progress);
                     }
                     if (pAMIYAFUGetECFStatusRes.Status == YAFU_ECF_SUCCESS)
                     {
-                        printf("\rFlashing  Firmware Image ECFProgress 4: 100%%... done\n");
+                        printf("\r\tFlashing  Firmware Image ECFProgress 4: 100%%... done\r\n");
                         break;
                     }
                 }
@@ -1412,15 +1412,15 @@ int ECFStatus(IPMI20_SESSION_T *hSession)
                 memcpy((char *)&pAMIYAFUNotAcknowledge, (char *)&pAMIYAFUGetECFStatusRes, sizeof(AMIYAFUNotAck));
                 if (pAMIYAFUNotAcknowledge.ErrorCode == YAFU_ERR_STATE)
                 {
-                    printf("Get ECF Status Failed\n");
+                    printf("Get ECF Status Failed\r\n");
                     return -1;
                 }
             }
 
-            printf("\rFlashing  Firmware Image ECFProgress 5: %d%%", pAMIYAFUGetECFStatusRes.Progress);
+            printf("\r\tFlashing  Firmware Image ECFProgress 5: %d%%", pAMIYAFUGetECFStatusRes.Progress);
             if (pAMIYAFUGetECFStatusRes.Progress >= 100)
             {
-                printf("\rFlashing  Firmware Image ECFProgress 6: %d%%... done\n", pAMIYAFUGetECFStatusRes.Progress);
+                printf("\r\tFlashing  Firmware Image ECFProgress 6: %d%%... done\r\n", pAMIYAFUGetECFStatusRes.Progress);
                 break;
             }
             //   sleep(1);
@@ -1429,7 +1429,7 @@ int ECFStatus(IPMI20_SESSION_T *hSession)
     DWORD end_time = GetTickCount();
     DWORD elapsed_time = end_time - start_time; // 毫秒
     
-    printf("Time elapsed: %.2fs\r\n", elapsed_time / 1000.0); // 2位小数
+    printf("\tTime elapsed: %.2fs\r\n", elapsed_time / 1000.0); // 2位小数
     return 0;
 }
 /*
@@ -1490,7 +1490,7 @@ int VerifyFlash(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsigned lo
             SET_ERR_CODE(ERR_BMC_COMM);
             if (vdbg)
             {
-                printf("\nWarning: VerifyFlash failed %d \n", errVal);
+                printf("\nWarning: VerifyFlash failed %d \r\n", errVal);
                 fflush(stdout);
             }
             RetryCount += 1;
@@ -1498,7 +1498,7 @@ int VerifyFlash(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsigned lo
             {
                 if (vdbg)
                 {
-                    printf("Retry #%d\n", RetryCount);
+                    printf("Retry #%d\r\n", RetryCount);
                     fflush(stdout);
                 }
                 continue;
@@ -1507,7 +1507,7 @@ int VerifyFlash(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsigned lo
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\r\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -1521,7 +1521,7 @@ int VerifyFlash(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsigned lo
         {
             if (vdbg)
             {
-                printf("\nWarning: VerifyFlash - AMI_YAFU_COMMON_NAK\n");
+                printf("\nWarning: VerifyFlash - AMI_YAFU_COMMON_NAK\r\n");
                 fflush(stdout);
             }
             RetryCount_NAK += 1;
@@ -1529,7 +1529,7 @@ int VerifyFlash(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsigned lo
             {
                 if (vdbg)
                 {
-                    printf("Retry #%d\n", RetryCount_NAK);
+                    printf("Retry #%d\r\n", RetryCount_NAK);
                     fflush(stdout);
                 }
                 continue;
@@ -1538,7 +1538,7 @@ int VerifyFlash(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsigned lo
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\r\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -1553,7 +1553,7 @@ int VerifyFlash(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsigned lo
         {
             if (vdbg)
             {
-                printf("\nWarning: VerifyFlash - Checksum error\n");
+                printf("\nWarning: VerifyFlash - Checksum error\r\n");
                 fflush(stdout);
             }
             RetryCount_CSUM += 1;
@@ -1561,7 +1561,7 @@ int VerifyFlash(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsigned lo
             {
                 if (vdbg)
                 {
-                    printf("Retry #%d\n", RetryCount_CSUM);
+                    printf("Retry #%d\r\n", RetryCount_CSUM);
                     fflush(stdout);
                 }
                 continue;
@@ -1570,7 +1570,7 @@ int VerifyFlash(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsigned lo
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\r\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -1671,7 +1671,7 @@ int VerifyStatus(IPMI20_SESSION_T *hsession_t)
                 if (pAMIYAFUGetVerifyStatusRes.Status >= 0x02 && pAMIYAFUGetVerifyStatusRes.Status <= 0x06)
                 {
                     if (vdbg)
-                        printf("Verify failed %x\n", pAMIYAFUGetVerifyStatusRes.Status);
+                        printf("Verify failed %x\r\n", pAMIYAFUGetVerifyStatusRes.Status);
                     return -1;
                 }
                 else
@@ -1761,7 +1761,7 @@ int DeactivateFlshMode(IPMI20_SESSION_T *hSession)
         {
             if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
             {
-                printf("Exiting as IPMI Session timed out due to inactivity\n");
+                printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                 exit(YAFU_COMMAND_TIMEOUT_ERR);
             }
             return -1;
@@ -1902,7 +1902,7 @@ int protectFlash(IPMI20_SESSION_T *hSession, INT32U Blknum, INT8U Protect)
         {
             if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
             {
-                printf("Exiting as IPMI Session timed out due to inactivity\n");
+                printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                 exit(YAFU_COMMAND_TIMEOUT_ERR);
             }
             return -1;
@@ -1922,7 +1922,7 @@ int protectFlash(IPMI20_SESSION_T *hSession, INT32U Blknum, INT8U Protect)
     }
     if (pAMIYAFUProtectFlashRes.ProtectFlashRes.YafuCmd == CMD_AMI_YAFU_COMMON_NAK)
     {
-        printf("Protect Flash Failed\n");
+        printf("Protect Flash Failed\r\n");
         memcpy((char *)&pAMIYAFUNotAcknowledge, (char *)&pAMIYAFUProtectFlashRes, sizeof(AMIYAFUNotAck));
         return -1;
     }
@@ -2022,7 +2022,7 @@ int FlashModHeadInfo(IPMI20_SESSION_T *hSession, AMIYAFUGetFMHInfoRes_T *FMHRes)
 
         if (ACCESN_OK != SendTimedImbpRequest(&IfcReqHdr, 13000, ResBuf, &ResLen, &CompCode))
         {
-            printf("Error in SendTimedImbpRequest \n");
+            printf("Error in SendTimedImbpRequest \r\n");
             SET_ERR_CODE(ERR_BMC_COMM);
             return -1;
         }
@@ -2088,13 +2088,13 @@ int GetStatus(IPMI20_SESSION_T *hSession)
         {
             if (pAMIYAFUGetStatusRes.CompletionCode == YAFU_CC_FLASHER_NOT_READY)
             {
-                printf("\n Flasher Not Ready ! Please Try After Sometime  \n");
+                printf("\n Flasher Not Ready ! Please Try After Sometime  \r\n");
                 Close_Session(hSession);
             }
 
             if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
             {
-                printf("Exiting as IPMI Session timed out due to inactivity\n");
+                printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                 exit(YAFU_COMMAND_TIMEOUT_ERR);
             }
             return -1;
@@ -2113,7 +2113,7 @@ int GetStatus(IPMI20_SESSION_T *hSession)
         memcpy(&pAMIYAFUGetStatusRes.GetStatusRes, ResBuf, ResLen);
         if (CompCode == YAFU_CC_FLASHER_NOT_READY)
         {
-            printf("\n Flasher Not Ready ! Please Try After Sometime  \n");
+            printf("\n Flasher Not Ready ! Please Try After Sometime  \r\n");
             return -1;
         }
     }
@@ -2127,7 +2127,7 @@ int GetStatus(IPMI20_SESSION_T *hSession)
 
     if (CalculateChksum((char *)&pAMIYAFUGetStatusRes.LastStatusCode, (INT32U)pAMIYAFUGetStatusRes.GetStatusRes.Datalen) != pAMIYAFUGetStatusRes.GetStatusRes.CRC32chksum)
     {
-        printf("check sum failed\n");
+        printf("check sum failed\r\n");
         return -1;
     }
 
@@ -2193,7 +2193,7 @@ int GetBootConfig(IPMI20_SESSION_T *hSession, char *BootVariables, char *BootVar
             SET_ERR_CODE(ERR_BMC_COMM);
             if (vdbg)
             {
-                printf("\nWarning: GetBootConfig failed %d \n", errVal);
+                printf("\nWarning: GetBootConfig failed %d \r\n", errVal);
                 fflush(stdout);
             }
             RetryCount += 1;
@@ -2201,7 +2201,7 @@ int GetBootConfig(IPMI20_SESSION_T *hSession, char *BootVariables, char *BootVar
             {
                 if (vdbg)
                 {
-                    printf("Retry #%d\n", RetryCount);
+                    printf("Retry #%d\r\n", RetryCount);
                     fflush(stdout);
                 }
                 continue;
@@ -2210,7 +2210,7 @@ int GetBootConfig(IPMI20_SESSION_T *hSession, char *BootVariables, char *BootVar
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\r\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -2225,7 +2225,7 @@ int GetBootConfig(IPMI20_SESSION_T *hSession, char *BootVariables, char *BootVar
         {
             if (vdbg)
             {
-                printf("\nWarning: GetBootConfig - AMI_YAFU_COMMON_NAK\n");
+                printf("\nWarning: GetBootConfig - AMI_YAFU_COMMON_NAK\r\n");
                 fflush(stdout);
             }
             RetryCount_NAK += 1;
@@ -2233,7 +2233,7 @@ int GetBootConfig(IPMI20_SESSION_T *hSession, char *BootVariables, char *BootVar
             {
                 if (vdbg)
                 {
-                    printf("Retry #%d\n", RetryCount_NAK);
+                    printf("Retry #%d\r\n", RetryCount_NAK);
                     fflush(stdout);
                 }
                 continue;
@@ -2242,7 +2242,7 @@ int GetBootConfig(IPMI20_SESSION_T *hSession, char *BootVariables, char *BootVar
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\r\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -2260,7 +2260,7 @@ int GetBootConfig(IPMI20_SESSION_T *hSession, char *BootVariables, char *BootVar
             {
                 if (vdbg)
                 {
-                    printf("Warning: Checksum failure GetBootConfig.  Attempting Retry #%d\n", RetryCount_CSUM);
+                    printf("Warning: Checksum failure GetBootConfig.  Attempting Retry #%d\r\n", RetryCount_CSUM);
                     fflush(stdout);
                 }
                 continue;
@@ -2269,7 +2269,7 @@ int GetBootConfig(IPMI20_SESSION_T *hSession, char *BootVariables, char *BootVar
             {
                 if (vdbg)
                 {
-                    printf("Error: Checksum failure GetBootConfig.  Aborting operation\n");
+                    printf("Error: Checksum failure GetBootConfig.  Aborting operation\r\n");
                     fflush(stdout);
                 }
                 return -1;
@@ -2342,7 +2342,7 @@ int SetBootConfig(IPMI20_SESSION_T *hSession, char *BootVar, char *BootVal)
             errVal = IPMICMD_AMIYAFUSetBootConfig(hSession, (AMIYAFUSetBootConfigReq_T *)TempBuff, &pAMIYAFUSetBootConfigRes, RECIEVE_TIME_OUT, ReqLen);
             if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
             {
-                printf("Exiting as IPMI Session timed out due to inactivity\n");
+                printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                 exit(YAFU_COMMAND_TIMEOUT_ERR);
             }
 #endif
@@ -2358,7 +2358,7 @@ int SetBootConfig(IPMI20_SESSION_T *hSession, char *BootVar, char *BootVal)
             SET_ERR_CODE(ERR_BMC_COMM);
             if (vdbg)
             {
-                printf("\nWarning: SetBootConfig failed %d \n", errVal);
+                printf("\nWarning: SetBootConfig failed %d \r\n", errVal);
                 fflush(stdout);
             }
             RetryCount += 1;
@@ -2366,7 +2366,7 @@ int SetBootConfig(IPMI20_SESSION_T *hSession, char *BootVar, char *BootVal)
             {
                 if (vdbg)
                 {
-                    printf("Retry #%d\n", RetryCount);
+                    printf("Retry #%d\r\n", RetryCount);
                     fflush(stdout);
                 }
                 continue;
@@ -2375,7 +2375,7 @@ int SetBootConfig(IPMI20_SESSION_T *hSession, char *BootVar, char *BootVal)
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\r\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -2390,7 +2390,7 @@ int SetBootConfig(IPMI20_SESSION_T *hSession, char *BootVar, char *BootVal)
         {
             if (vdbg)
             {
-                printf("\nWarning: SetBootConfig - AMI_YAFU_COMMON_NAK\n");
+                printf("\nWarning: SetBootConfig - AMI_YAFU_COMMON_NAK\r\n");
                 fflush(stdout);
             }
             RetryCount_NAK += 1;
@@ -2398,7 +2398,7 @@ int SetBootConfig(IPMI20_SESSION_T *hSession, char *BootVar, char *BootVal)
             {
                 if (vdbg)
                 {
-                    printf("Retry #%d\n", RetryCount_NAK);
+                    printf("Retry #%d\r\n", RetryCount_NAK);
                     fflush(stdout);
                 }
                 continue;
@@ -2407,7 +2407,7 @@ int SetBootConfig(IPMI20_SESSION_T *hSession, char *BootVar, char *BootVal)
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\r\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -2425,7 +2425,7 @@ int SetBootConfig(IPMI20_SESSION_T *hSession, char *BootVar, char *BootVal)
             {
                 if (vdbg)
                 {
-                    printf("Warning: Checksum failure SetBootConfig.  Attempting Retry #%d\n", RetryCount_CSUM);
+                    printf("Warning: Checksum failure SetBootConfig.  Attempting Retry #%d\r\n", RetryCount_CSUM);
                     fflush(stdout);
                 }
                 continue;
@@ -2434,7 +2434,7 @@ int SetBootConfig(IPMI20_SESSION_T *hSession, char *BootVar, char *BootVal)
             {
                 if (vdbg)
                 {
-                    printf("Error: Checksum failure SetBootConfig.  Aborting operation\n");
+                    printf("Error: Checksum failure SetBootConfig.  Aborting operation\r\n");
                     fflush(stdout);
                 }
                 return -1;
@@ -2491,7 +2491,7 @@ int GetAllBootVars(IPMI20_SESSION_T *hSession, unsigned char *BootVars, INT16U *
             errVal = IPMICMD_AMIYAFUGetAllBootVars(hSession, pAMIYAFUGetBootVarsReq, (AMIYAFUGetBootVarsRes_T *)ResBuf, RECIEVE_TIME_OUT);
             if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
             {
-                printf("Exiting as IPMI Session timed out due to inactivity\n");
+                printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                 exit(YAFU_COMMAND_TIMEOUT_ERR);
             }
 
@@ -2509,7 +2509,7 @@ int GetAllBootVars(IPMI20_SESSION_T *hSession, unsigned char *BootVars, INT16U *
             SET_ERR_CODE(ERR_BMC_COMM);
             if (vdbg)
             {
-                printf("\nWarning: GetAllBootVars failed %d \n", errVal);
+                printf("\nWarning: GetAllBootVars failed %d \r\n", errVal);
                 fflush(stdout);
             }
             RetryCount += 1;
@@ -2517,7 +2517,7 @@ int GetAllBootVars(IPMI20_SESSION_T *hSession, unsigned char *BootVars, INT16U *
             {
                 if (vdbg)
                 {
-                    printf("Retry #%d\n", RetryCount);
+                    printf("Retry #%d\r\n", RetryCount);
                     fflush(stdout);
                 }
                 continue;
@@ -2526,7 +2526,7 @@ int GetAllBootVars(IPMI20_SESSION_T *hSession, unsigned char *BootVars, INT16U *
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\r\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -2541,7 +2541,7 @@ int GetAllBootVars(IPMI20_SESSION_T *hSession, unsigned char *BootVars, INT16U *
 
             if (vdbg)
             {
-                printf("\nWarning: GetAllBootVars - AMI_YAFU_COMMON_NAK\n");
+                printf("\nWarning: GetAllBootVars - AMI_YAFU_COMMON_NAK\r\n");
                 fflush(stdout);
             }
             RetryCount_NAK += 1;
@@ -2549,7 +2549,7 @@ int GetAllBootVars(IPMI20_SESSION_T *hSession, unsigned char *BootVars, INT16U *
             {
                 if (vdbg)
                 {
-                    printf("Retry #%d\n", RetryCount_NAK);
+                    printf("Retry #%d\r\n", RetryCount_NAK);
                     fflush(stdout);
                 }
                 continue;
@@ -2558,7 +2558,7 @@ int GetAllBootVars(IPMI20_SESSION_T *hSession, unsigned char *BootVars, INT16U *
             {
                 if (vdbg)
                 {
-                    printf("Error: Retry Count exceeded. Aborting, line = %d\n", __LINE__);
+                    printf("Error: Retry Count exceeded. Aborting, line = %d\r\n", __LINE__);
                     fflush(stdout);
                 }
                 return -1;
@@ -2576,7 +2576,7 @@ int GetAllBootVars(IPMI20_SESSION_T *hSession, unsigned char *BootVars, INT16U *
             {
                 if (vdbg)
                 {
-                    printf("Warning: Checksum failure GetAllBootVars.  Attempting Retry #%d\n", RetryCount_CSUM);
+                    printf("Warning: Checksum failure GetAllBootVars.  Attempting Retry #%d\r\n", RetryCount_CSUM);
                     fflush(stdout);
                 }
                 continue;
@@ -2585,7 +2585,7 @@ int GetAllBootVars(IPMI20_SESSION_T *hSession, unsigned char *BootVars, INT16U *
             {
                 if (vdbg)
                 {
-                    printf("Error: Checksum failure GetAllBootVars.  Aborting operation\n");
+                    printf("Error: Checksum failure GetAllBootVars.  Aborting operation\r\n");
                     fflush(stdout);
                 }
                 return -1;
@@ -2630,10 +2630,10 @@ int GetPreserveConfStatus(IPMI20_SESSION_T *hSession, unsigned short selector)
         CompCode = pGetPreserveConfigRes.CompletionCode;
         if (errVal != 0)
         {
-            printf("The return value is %x \n", errVal);
+            printf("The return value is %x \r\n", errVal);
             if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
             {
-                printf("Exiting as IPMI Session timed out due to inactivity\n");
+                printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                 exit(YAFU_COMMAND_TIMEOUT_ERR);
             }
             return errVal;
@@ -2694,10 +2694,10 @@ int GetAllPreserveConfStatus(IPMI20_SESSION_T *hSession, unsigned short *status,
 
         if (errVal != 0)
         {
-            printf("The return value is %x \n", errVal);
+            printf("The return value is %x \r\n", errVal);
             if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
             {
-                printf("Exiting as IPMI Session timed out due to inactivity\n");
+                printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                 exit(YAFU_COMMAND_TIMEOUT_ERR);
             }
             return errVal;
@@ -2776,7 +2776,7 @@ int SetAllPreserveConfStatus(IPMI20_SESSION_T *hSession, unsigned short Status)
         {
             if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
             {
-                printf("Exiting as IPMI Session timed out due to inactivity\n");
+                printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                 exit(YAFU_COMMAND_TIMEOUT_ERR);
             }
             return errVal;
@@ -2833,7 +2833,7 @@ int OnEnableUSBDevice()
 
     if (FLASH_LoadDriver() != 1)
     {
-        printf("Failed\n");
+        printf("Failed\r\n");
         exit(1);
     }
 
@@ -2895,10 +2895,10 @@ int GetExtendedLogConf(IPMI20_SESSION_T *hSession, INT8U LogConfig)
         }
         if (errVal != 0)
         {
-            printf("The return value is %x \n", errVal);
+            printf("The return value is %x \r\n", errVal);
             if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
             {
-                printf("Exiting as IPMI Session timed out due to inactivity\n");
+                printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                 exit(YAFU_COMMAND_TIMEOUT_ERR);
             }
             return errVal;
@@ -2919,7 +2919,7 @@ int GetExtendedLogConf(IPMI20_SESSION_T *hSession, INT8U LogConfig)
         {
 
             SET_ERR_CODE(ERR_BMC_COMM);
-            printf("Error: Get feature status..\n");
+            printf("Error: Get feature status..\r\n");
             exit(0);
         }
         memcpy(&pGetExtLogConfRes.LogConfig, ResBuf, ResLen);
@@ -3001,14 +3001,14 @@ int GetFeatureStatus(IPMI20_SESSION_T *hSession, char *featureName)
             if (CompCode == LIBIPMI_MEDIUM_E_TIMED_OUT)
             {
 
-                printf("Exiting as IPMI Session timed out due to inactivity\n");
+                printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                 exit(YAFU_COMMAND_TIMEOUT_ERR);
             }
 
             if (CompCode == CC_INV_CMD)
             {
-                /*printf("Warning: Current Yafutool not Support with given firmware!!!! \n");
-                printf("Use Lower Version (< 3.0.0) of yafutools \n");
+                /*printf("Warning: Current Yafutool not Support with given firmware!!!! \r\n");
+                printf("Use Lower Version (< 3.0.0) of yafutools \r\n");
                 exit(0);*/
 
                 CompCode = IsfeatureEnabled(hSession, featureName);
@@ -3022,16 +3022,16 @@ int GetFeatureStatus(IPMI20_SESSION_T *hSession, char *featureName)
                 }
                 else
                 {
-                    printf("Error Getting Feature Info \n");
+                    printf("Error Getting Feature Info \r\n");
                     exit(0);
                 }
             }
             if (CompCode == CC_DEV_IN_FIRMWARE_UPDATE_MODE)
             {
-                printf("Warning: Device is already in Firmware Update Mode...\n");
+                printf("Warning: Device is already in Firmware Update Mode...\r\n");
                 exit(YAFU_CC_DEV_IN_FIRMWARE_UPDATE_MODE);
             }
-            printf("Error: Get feature status..\n");
+            printf("Error: Get feature status..\r\n");
             exit(0);
         }
         else
@@ -3047,8 +3047,8 @@ int GetFeatureStatus(IPMI20_SESSION_T *hSession, char *featureName)
         retVal = SendTimedImbpRequest(&IfcReqHdr, 6000, ResBuf, &ResLen, &CompCode);
         if (CompCode == 0xC1)
         {
-            /* printf("Warning: Current Yafutool not Support with given firmware!!!! \n");
-             printf("Use Lower Version (< 3.0.0) of yafutools \n");
+            /* printf("Warning: Current Yafutool not Support with given firmware!!!! \r\n");
+             printf("Use Lower Version (< 3.0.0) of yafutools \r\n");
              exit(0);*/
 
             CompCode = IsfeatureEnabled(hSession, featureName);
@@ -3062,7 +3062,7 @@ int GetFeatureStatus(IPMI20_SESSION_T *hSession, char *featureName)
             }
             else
             {
-                printf("Error Getting Feature Info \n");
+                printf("Error Getting Feature Info \r\n");
                 exit(0);
             }
         }
@@ -3070,7 +3070,7 @@ int GetFeatureStatus(IPMI20_SESSION_T *hSession, char *featureName)
         {
 
             SET_ERR_CODE(ERR_BMC_COMM);
-            printf("Error: Get feature status..\n");
+            printf("Error: Get feature status..\r\n");
             exit(0);
         }
         return ResBuf[0];
@@ -3111,7 +3111,7 @@ int SendMiscellaneousInfo(IPMI20_SESSION_T *hSession, INT8U PreserveFlag, AMIYAF
         {
             if (errVal == LIBIPMI_MEDIUM_E_TIMED_OUT)
             {
-                printf("Exiting as IPMI Session timed out due to inactivity\n");
+                printf("Exiting as IPMI Session timed out due to inactivity\r\n");
                 exit(YAFU_COMMAND_TIMEOUT_ERR);
             }
             return -1;
@@ -3211,14 +3211,14 @@ int ReadRngFirmwareRelBase(IPMI20_SESSION_T *hSession, char *CurReleaseID, char 
 
     if (!FMHFound)
     {
-        printf("FMH information not found\n");
+        printf("FMH information not found\r\n");
         return -1;
     }
 
     ReleaseBuf = malloc(TotalSize);
     if (ReleaseBuf == NULL)
     {
-        printf("Cannot allocate memory\n");
+        printf("Cannot allocate memory\r\n");
         fflush(stdout);
         return -1;
     }
@@ -3297,7 +3297,7 @@ int ReadBackupConfnBkconf(IPMI20_SESSION_T *hSession, int ReadFlag)
 
     if (GetConfBkupConfLocation(&ConfLocation, &bkupConfLocation, 1) != 0)
     {
-        printf("Get Configuration Index Failed\n");
+        printf("Get Configuration Index Failed\r\n");
         return -1;
     }
 
@@ -3310,7 +3310,7 @@ int ReadBackupConfnBkconf(IPMI20_SESSION_T *hSession, int ReadFlag)
         ConfData = malloc(TotalSize);
         if (ConfData == NULL)
         {
-            printf("Allocating Memory Failed\n");
+            printf("Allocating Memory Failed\r\n");
             return -1;
         }
 
@@ -3372,7 +3372,7 @@ int ReadBackupConfnBkconf(IPMI20_SESSION_T *hSession, int ReadFlag)
 #endif
             {
                 AMIYAFUNotAck *pAMIYAFUNotAck = (AMIYAFUNotAck *)ResBuf;
-                printf("Failure in Reading Configurations from Running Image\n");
+                printf("Failure in Reading Configurations from Running Image\r\n");
                 SET_ERR_CODE(ERR_BMC_COMM);
                 free(ConfData);
                 return -1;
@@ -3383,7 +3383,7 @@ int ReadBackupConfnBkconf(IPMI20_SESSION_T *hSession, int ReadFlag)
             BlkSize += pAMIYAFUReadFlashReq->Sizetoread;
             TotalSize -= pAMIYAFUReadFlashReq->Sizetoread;
         }
-        printf("Reading  Configurations ...        done\n");
+        printf("Reading  Configurations ...        done\r\n");
     }
     else
     {
@@ -3396,7 +3396,7 @@ int ReadBackupConfnBkconf(IPMI20_SESSION_T *hSession, int ReadFlag)
         BkupConfData = malloc(TotalSize);
         if (BkupConfData == NULL)
         {
-            printf("Allocating Memory Failed\n");
+            printf("Allocating Memory Failed\r\n");
             return -1;
         }
 
@@ -3455,7 +3455,7 @@ int ReadBackupConfnBkconf(IPMI20_SESSION_T *hSession, int ReadFlag)
 #endif
             {
                 AMIYAFUNotAck *pAMIYAFUNotAck = (AMIYAFUNotAck *)ResBuf;
-                printf("Failure in Reading  Backup Configurations from Running Image\n");
+                printf("Failure in Reading  Backup Configurations from Running Image\r\n");
                 SET_ERR_CODE(ERR_BMC_COMM);
                 free(BkupConfData);
                 return -1;
@@ -3466,7 +3466,7 @@ int ReadBackupConfnBkconf(IPMI20_SESSION_T *hSession, int ReadFlag)
             BlkSize += pAMIYAFUReadFlashReq->Sizetoread;
             TotalSize -= pAMIYAFUReadFlashReq->Sizetoread;
         }
-        printf("Reading Backup Configurations ...  done\n");
+        printf("Reading Backup Configurations ...  done\r\n");
     }
 
     fflush(stdout);
@@ -3519,7 +3519,7 @@ int EraseFlash(IPMI20_SESSION_T *hSession, unsigned int ModLocation, unsigned in
 #endif
         {
             AMIYAFUNotAck *pAMIYAFUNotAck = (AMIYAFUNotAck *)&pAMIYAFUErashFlashRes;
-            printf("Failure in Erasing Configuration Sectors\n");
+            printf("Failure in Erasing Configuration Sectors\r\n");
             SET_ERR_CODE(ERR_BMC_COMM);
             return -1;
         }
@@ -3548,7 +3548,7 @@ int WriteBackupConfnBkconf(IPMI20_SESSION_T *hSession, int WriteFlag)
 
     if (GetConfBkupConfLocation(&ConfLocation, &bkupConfLocation, 2) != 0)
     {
-        printf("Get Configuration Index Failed\n");
+        printf("Get Configuration Index Failed\r\n");
         return -1;
     }
 
@@ -3610,7 +3610,7 @@ int WriteBackupConfnBkconf(IPMI20_SESSION_T *hSession, int WriteFlag)
 #endif
             {
                 AMIYAFUNotAck *pAMIYAFUNotAck = (AMIYAFUNotAck *)ResBuf;
-                printf("Failure in Writing Configurations to New Image\n");
+                printf("Failure in Writing Configurations to New Image\r\n");
                 SET_ERR_CODE(ERR_BMC_COMM);
                 free(ConfData);
                 return -1;
@@ -3620,7 +3620,7 @@ int WriteBackupConfnBkconf(IPMI20_SESSION_T *hSession, int WriteFlag)
             TotalSize -= (pAMIYAFUWriteFlashReq->WriteFlashReq.Datalen - 5);
         }
 
-        printf("Setting Configurations ...         done\n");
+        printf("Setting Configurations ...         done\r\n");
         free(ConfData);
     }
     else
@@ -3684,7 +3684,7 @@ int WriteBackupConfnBkconf(IPMI20_SESSION_T *hSession, int WriteFlag)
 #endif
             {
                 AMIYAFUNotAck *pAMIYAFUNotAck = (AMIYAFUNotAck *)ResBuf;
-                printf("Failure in Writing Backup Configurations to New Image\n");
+                printf("Failure in Writing Backup Configurations to New Image\r\n");
                 SET_ERR_CODE(ERR_BMC_COMM);
                 free(BkupConfData);
                 return -1;
@@ -3693,7 +3693,7 @@ int WriteBackupConfnBkconf(IPMI20_SESSION_T *hSession, int WriteFlag)
             BlkSize += (pAMIYAFUWriteFlashReq->WriteFlashReq.Datalen - 5);
             TotalSize -= (pAMIYAFUWriteFlashReq->WriteFlashReq.Datalen - 5);
         }
-        printf("Setting Backup Configurations ...  done\n");
+        printf("Setting Backup Configurations ...  done\r\n");
         free(BkupConfData);
     }
 
@@ -3781,7 +3781,7 @@ int SetBlkUBootVars(IPMI20_SESSION_T *hSession, env_t *env, unsigned int EnvSize
         if ((ACCESN_OK != errVal) || (CompCode != 0))
 #endif
         {
-            printf("SetBlkUBootVars Communication Failure\n");
+            printf("SetBlkUBootVars Communication Failure\r\n");
             SET_ERR_CODE(ERR_BMC_COMM);
             free(BootMem);
             return -1;
@@ -3791,7 +3791,7 @@ int SetBlkUBootVars(IPMI20_SESSION_T *hSession, env_t *env, unsigned int EnvSize
         TotalSize -= (pAMIYAFUWriteFlashReq->WriteFlashReq.Datalen - 5);
     }
 
-    printf("Setting Env variables...           done\n");
+    printf("Setting Env variables...           done\r\n");
     free(BootMem);
     fflush(stdout);
     return 0;
@@ -3839,7 +3839,7 @@ int CompareMeVersion(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsign
     {
 
         SET_ERR_CODE(ERR_BMC_COMM);
-        printf("Error: ME Get feature status..\n");
+        printf("Error: ME Get feature status..\r\n");
         return -1;
     }
 
@@ -3849,14 +3849,14 @@ int CompareMeVersion(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsign
         memcpy((char *)&pAMIYAFUNotAcknowledge, (char *)&pAMIYAFUCompareMeVersionRes, sizeof(AMIYAFUNotAck));
         if (pAMIYAFUNotAcknowledge.ErrorCode == YAFU_ERR_STATE)
         {
-            printf("Compare Me Version Command Failed\n");
+            printf("Compare Me Version Command Failed\r\n");
             return -1;
         }
     }
 
     if (CalculateChksum((char *)&pAMIYAFUCompareMeVersionRes.Current_Status, (10 * sizeof(INT8U))) != pAMIYAFUCompareMeVersionRes.CompareMeVersionRes.CRC32chksum)
     {
-        printf("Error checksum\n");
+        printf("Error checksum\r\n");
         return -1;
     }
 
@@ -3866,23 +3866,23 @@ int CompareMeVersion(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsign
     switch (ME_Current_Status)
     {
     case NORMALME:
-        printf("The Existing ME image version: %d.%d.%d.%d\n",
+        printf("The Existing ME image version: %d.%d.%d.%d\r\n",
                pAMIYAFUCompareMeVersionRes.Current_Version.Major,
                pAMIYAFUCompareMeVersionRes.Current_Version.Minor,
                pAMIYAFUCompareMeVersionRes.Current_Version.Hotfix,
                pAMIYAFUCompareMeVersionRes.Current_Version.BuildNo);
         break;
     case FAIL_NOT_SUPPORTED:
-        printf("Current ME version is not support online updte\n");
+        printf("Current ME version is not support online updte\r\n");
         break;
     case FAIL_UNKNOW_ME_VER:
-        printf("Unknow current ME Ver\n");
+        printf("Unknow current ME Ver\r\n");
         break;
     case FAIL_GET_ME_VER:
-        printf("Error: Get current ME version fail\n");
+        printf("Error: Get current ME version fail\r\n");
         break;
     default:
-        printf("Error: Invalid return status\n");
+        printf("Error: Invalid return status\r\n");
         return -1;
     }
 
@@ -3890,7 +3890,7 @@ int CompareMeVersion(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsign
 
     if (pAMIYAFUCompareMeVersionRes.Comparison_Status != INVALID_ME_IMG)
     {
-        printf("The uploaded ME image version: %d.%d.%d.%d\n",
+        printf("The uploaded ME image version: %d.%d.%d.%d\r\n",
                pAMIYAFUCompareMeVersionRes.New_Version.Major,
                pAMIYAFUCompareMeVersionRes.New_Version.Minor,
                pAMIYAFUCompareMeVersionRes.New_Version.Hotfix,
@@ -3903,16 +3903,16 @@ int CompareMeVersion(IPMI20_SESSION_T *hSession, unsigned long MemOffset, unsign
     case NORMALME:
         break;
     case SAME_ME_VER:
-        printf("The ME images are same Version\n");
+        printf("The ME images are same Version\r\n");
         break;
     case OLDER_ME_VER:
-        printf("The New ME image version is older than current existing image version\n");
+        printf("The New ME image version is older than current existing image version\r\n");
         break;
     case INVALID_ME_IMG:
-        printf("Error: Invalid image\n");
+        printf("Error: Invalid image\r\n");
         break;
     default:
-        printf("Error: Invalid return status\n");
+        printf("Error: Invalid return status\r\n");
         return -1;
     }
 
